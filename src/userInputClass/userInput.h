@@ -15,7 +15,7 @@
 template  <typename  inputTemplateType,typename  argsTemp=unsigned short>
 class userInput {
 public:
-	bool getInput(inputTemplateType &inputVariable,const std::string inputPrompt,std::vector<argsTemp> argList={},bool (* validationFuncion)(std::vector<argsTemp>)=nullptr);
+	bool getInput(inputTemplateType &inputVariable,const std::string inputPrompt,std::vector<argsTemp> argList={},bool (* validationFuncion)(const std::vector<argsTemp>&)=nullptr);
 	bool test();
 //	inputTemplateType test;
 };
@@ -28,7 +28,7 @@ public:
  */
 
 template <typename  inputTemplateType, typename argsTemp>
-bool userInput<inputTemplateType,argsTemp>::getInput(inputTemplateType &inputVariable,const std::string inputPrompt,std::vector<argsTemp> argList,bool (* validationFuncion)(std::vector<argsTemp>))
+bool userInput<inputTemplateType,argsTemp>::getInput(inputTemplateType &inputVariable,const std::string inputPrompt,std::vector<argsTemp> argList,bool (* validationFuncion)(const std::vector<argsTemp>&))
 {
 		bool validInput=false;
 		do
