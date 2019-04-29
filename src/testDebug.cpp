@@ -13,32 +13,40 @@
 #include<cstdlib>
 #include <experimental/filesystem>
 #include "easyLogger/easylogging++.h"
+#include "userInputClass/userInput.h"
+
+
 #define ELPP_THREAD_SAFE
 INITIALIZE_EASYLOGGINGPP
+
+bool valid(std::vector<unsigned short *> argList)
+{
+	std::cout<<"i entered the function,with params:"<<(*argList[0])<<(*argList[1])<<(*argList[2])<<"\n";
+	if((*argList[0])!=(*argList[1])&&(*argList[0])!=(*argList[2]))
+		return false;
+	return true;
+}
 int main() {
+
  	unsigned long long gridWidth;
-	unsigned long long testLoops,noThreads;
-	  srand(static_cast<unsigned int>(clock()));
-	  std::cout<<"enter number of test loops:\n";
-	  	std::cin>>testLoops;
-	  std::cout<<"enter number of threads:\n";
-		std::cin>>noThreads;
-
-	for(;testLoops>0;testLoops--)
+	unsigned long long noThreads;
 	{
-//		std::cout<<"loop number "<<testLoops<<std::endl;
-		gridWidth=rand()%1000 +1;
-		//get pattern generator depending on the user input
-		PatternGeneratorNS::PatternGenerator  *generator =
-				PatternGeneratorNS::GeneratorFactory::
-				make_generator(PatternGeneratorNS::GeneratorFactory::random_pattern_generator,gridWidth,noThreads);
-		generator->generatePattern();
-
-		delete generator;
-
+		userInput<unsigned long long,unsigned short *> inputObj;
+		inputObj.getInput(gridWidth,"Please input the grid Width");
+		inputObj.getInput(noThreads,"Input the number of desired threads");
 	}
-//	auto it=std::experimental::filesystem::current_path();
-    for(auto& p: std::experimental::filesystem::directory_iterator("randomFiles"))
-        std::cout << p.path() << '\n';
-	return 0;
+	unsigned short inputMethod;
+	unsigned short option1=1,option2=2;
+	{
+		userInput<unsigned short,unsigned short *> inputObj;
+		std::vector<unsigned short *> argList={&inputMethod,&option1,&option2};
+		bool (*fcnPtr)(std::vector<unsigned short *>)=valid;
+		std::cout<<" function address "<<fcnPtr<<"\n";
+		inputObj.getInput(inputMethod,"Input the Pattern generator Method,'1' for Random , and '2' for All possible patterns : ",argList,fcnPtr);
+	}
+		std::cout<<gridWidth<<noThreads<<inputMethod<<std::endl;
+	//	PatternGeneratorNS::PatternGenerator  *generator =
+//					PatternGeneratorNS::GeneratorFactory::
+//					make_generator(PatternGeneratorNS::GeneratorFactory::random_pattern_generator,gridWidth,noThreads);
+//			generator->generatePattern();
 }

@@ -8,7 +8,6 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include src/userInputClass/subdir.mk
 -include src/easyLogger/subdir.mk
 -include src/PatternTester/subdir.mk
 -include src/Binary_Pattern_Generator/subdir.mk

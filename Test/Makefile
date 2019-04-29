@@ -10,7 +10,7 @@ debugFlag = -D _testMode
 
 
 
-SRC=$(wildcard $(MAIN_SRC_PATH)/Binary_Pattern_Generator/*.cpp )
+SRC=$(wildcard $(MAIN_SRC_PATH)/Binary_Pattern_Generator/*.cpp $(MAIN_SRC_PATH)/userInputClass/*.cpp )
 EASYLOGGERSRC=$(wildcard $(MAIN_SRC_PATH)/easyLogger/*.cc )
 TESTSRC=../src/test.cpp $(wildcard $(MAIN_SRC_PATH)/PatternTester/*.cpp)
 TESTDEBUGSRC=../src/testDebug.cpp
@@ -51,13 +51,16 @@ obj/%.o: ../src/%.cpp
 	@mkdir -p obj
 	@mkdir -p obj/Binary_Pattern_Generator	
 	@mkdir -p obj/easyLogger	
-	@mkdir -p obj/PatternTester	
+	@mkdir -p obj/PatternTester
+	@mkdir -p obj/userInputClass
+	
 	$(CC) $(debugFlag) $(CFLAGS) $(INCL) -o $@ $<
 obj/%.o: ../src/%.cc
 	@mkdir -p obj
 	@mkdir -p obj/Binary_Pattern_Generator	
 	@mkdir -p obj/easyLogger	
 	@mkdir -p obj/PatternTester	
+	@mkdir -p obj/userInputClass	
 	$(CC) $(debugFlag) $(CFLAGS) $(INCL) -o $@ $<
 clean:
 	rm -rf run $(EASYLOGGEROBJ) $(TESTOBJ) $(OBJ)
