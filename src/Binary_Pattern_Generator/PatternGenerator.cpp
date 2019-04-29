@@ -10,6 +10,7 @@ namespace PatternGeneratorNS
 {
 PatternGenerator::PatternGenerator(unsigned long long &patternSize):patternSize(patternSize)
 {
+
 }
 PatternGenerator::~PatternGenerator()
 {

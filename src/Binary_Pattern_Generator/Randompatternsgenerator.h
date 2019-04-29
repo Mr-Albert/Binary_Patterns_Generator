@@ -14,6 +14,10 @@
 #include<iostream>
 #include <fstream>
 #include<string>
+#include <time.h>       /* time_t, time, ctime */
+#include <iostream>
+#include <experimental/filesystem>
+
 namespace PatternGeneratorNS
 {
 class Random_patterns_generator : public  PatternGenerator {
@@ -22,7 +26,7 @@ private:
 	//previousRow is the last completed row that was generated,needed for validation
 	std::vector<bool> previousRow,currentRow;
     std::ofstream outputFile;
-    std::string fileName="randomPatternsFile_";
+    std::string fileName="randomFiles/randomPatternsFile_";
 	bool generatePatternWorker();
 	inline bool generate_random_pattern();
 	inline void generate_random_row(std::vector<bool> &destinationRow,unsigned long long rowStart,unsigned long long rowEnd);

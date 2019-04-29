@@ -27,4 +27,5 @@ src/Binary_Pattern_Generator \
 src \
 src/PatternTester \
 src/easyLogger \
+src/userInputClass \
 

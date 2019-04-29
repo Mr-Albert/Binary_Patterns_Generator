@@ -6,23 +6,28 @@
  */
 
 #include "Randompatternsgenerator.h"
-#include <time.h>       /* time_t, time, ctime */
 
-#include <iostream>
 namespace PatternGeneratorNS
 {
 Random_patterns_generator::Random_patterns_generator(unsigned long long patternSize):PatternGenerator(patternSize) {
+		#ifdef _DebugMode
+//			std::cout<<"i a in debug mode"<<std::endl;
+		#endif
 	  //open resources(file(s))
 	  //+std::tmpnam+
 	  // generating a psuedo unique file name               //#CR check if the file already exists
-	  fileName+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
+	  std::experimental::filesystem::create_directories("randomFiles");
+      fileName+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
 	  outputFile.open(fileName);
 	  //seeding random number generator
 	  srand(static_cast<unsigned int>(clock()));
-		std::cout<<"size "<<patternSize<<std::endl;
+		#ifdef _DebugMode
+//		std::cout<<"size "<<patternSize<<std::endl;
+		#endif
 	  previousRow.resize(patternSize,0);
-		std::cout<<"size "<<previousRow.size()-1<<std::endl;
-
+	  #ifdef _DebugMode
+//      std::cout<<"size "<<previousRow.size()-1<<std::endl;
+	  #endif
 	  currentRow.resize(patternSize,0);
 	  //generate the first row
 	  //maybe use threads?
@@ -36,12 +41,12 @@ inline bool Random_patterns_generator::singularity_checker(bool binaryInput,unsi
 {
 	//first element in row ,need to check the upper right corner only
 	if(currentRowPosition==0)
-		return binaryInput ^(previousRow[currentRowPosition+1]);
+		return binaryInput&(binaryInput ^(previousRow[currentRowPosition+1]));
 	//last element in the row ;need to check upper left corner only
 	if(currentRowPosition==previousRow.size()-1)
-		return binaryInput ^(previousRow[currentRowPosition+1]);
+		return binaryInput&(binaryInput ^(previousRow[currentRowPosition+1]));
 	//check two corners
-	return binaryInput ^(previousRow[currentRowPosition-1]|previousRow[currentRowPosition+1]);
+	return binaryInput&(binaryInput ^(previousRow[currentRowPosition-1]|previousRow[currentRowPosition+1]));
 }
 
 inline void Random_patterns_generator::generate_random_row(std::vector<bool> &destinationRow,unsigned long long rowStart,unsigned long long rowEnd)
@@ -57,17 +62,32 @@ bool Random_patterns_generator::generatePattern()
 {
 	//maybe use Threads?
 	  // generate Current row
+	 for(unsigned long long rowIdx=1;rowIdx<patternSize;rowIdx++)
+	 {
 	  generate_random_row(currentRow,0,patternSize);
 	  //save previos row into stream
 	  savePattern();
 	  // make current row the previous row O(1)
+	for(unsigned long long int i=1;i<patternSize-1;i++)
+	{
+		if(currentRow[i]==1&&(previousRow[i-1]==1||previousRow[i+1]==1))
+		{
+			std::cout<<"error at rowidx = "<<rowIdx<<"and i ="<<i<<"\n";
+			for(unsigned long long int ii=0;ii<patternSize;ii++)
+				std::cout<<previousRow[ii]<<",";
+			std::cout<<std::endl<<"current row\n";
+			for(unsigned long long int ii=0;ii<patternSize;ii++)
+				std::cout<<currentRow[ii]<<",";
+			std::cout<<std::endl<<" finsisshed current row\n";
+			std::cout<<"singu checker result"<<singularity_checker(currentRow[i],i)<<std::endl;
+
+		}
+	}
 	  previousRow.swap(currentRow);
+	 }
 	return 1;
 
-	for(unsigned long long i=0;i<patternSize;i++)
-	{
-		std::cout<<generate_random_pattern()<<" ";
-	}
+
 }
 inline bool Random_patterns_generator::generate_random_pattern()
 {
@@ -76,16 +96,21 @@ inline bool Random_patterns_generator::generate_random_pattern()
 }
 bool Random_patterns_generator::savePattern()
 {
+	#ifdef _DebugMode
 	std::cout<<"entering the save"<<std::endl;
+	#endif
 	unsigned long long fileInpurRowIdx=0;
 	for(;fileInpurRowIdx<previousRow.size()-1;fileInpurRowIdx++)
 	{
 		outputFile<<previousRow[fileInpurRowIdx]<<",";
+		#ifdef _DebugMode
 		std::cout<<previousRow[fileInpurRowIdx]<<",";
-
+        #endif
 	}
 	//output last element with a new line without a flush
+	#ifdef _DebugMode
 	std::cout<<previousRow[fileInpurRowIdx]<<"\n";
+	#endif
 	outputFile<<previousRow[fileInpurRowIdx]<<"\n";
 	return 1;
 }
@@ -93,7 +118,9 @@ bool Random_patterns_generator::savePattern()
 Random_patterns_generator::~Random_patterns_generator() {
 
 	  //close open resources
+	#ifdef _DebugMode
 	  std::cout<<"closing resources"<<std::endl;
+	#endif
 	  outputFile.flush();
 	  outputFile.close();
 
