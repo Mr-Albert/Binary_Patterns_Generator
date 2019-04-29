@@ -3,5 +3,5 @@ int main()
 {
 
 	std::cout<<"i am a debug file";
-	return 25546;
+	return 0;
 }

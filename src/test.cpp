@@ -3,5 +3,5 @@ int main()
 {
 	std::cout<<"i am a unit test file";
 
-	return 2554655;
+	return 0;
 }
