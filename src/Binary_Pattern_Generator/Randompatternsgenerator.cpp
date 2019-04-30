@@ -9,29 +9,38 @@
 
 namespace PatternGeneratorNS
 {
-Random_patterns_generator::Random_patterns_generator(unsigned long long patternSize):PatternGenerator(patternSize) {
-		#ifdef _DebugMode
-//			std::cout<<"i a in debug mode"<<std::endl;
-		#endif
-	  //open resources(file(s))
-	  //+std::tmpnam+
-	  // generating a psuedo unique file name               //#CR check if the file already exists
-	  std::experimental::filesystem::create_directories("randomFiles");
-      fileName+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
-	  outputFile.open(fileName);
-	  //seeding random number generator
-	  srand(static_cast<unsigned int>(clock()));
-		#ifdef _DebugMode
-//		std::cout<<"size "<<patternSize<<std::endl;
-		#endif
-	  previousRow.resize(patternSize,0);
-	  #ifdef _DebugMode
-//      std::cout<<"size "<<previousRow.size()-1<<std::endl;
-	  #endif
-	  currentRow.resize(patternSize,0);
-	  //generate the first row
-	  //maybe use threads?
-	  generate_random_row(previousRow,0,patternSize);
+Random_patterns_generator::Random_patterns_generator(unsigned long long patternSize,unsigned short noThreads):PatternGenerator(patternSize,noThreads) {
+	#ifdef _DebugMode
+		std::cout<<"patternSize ="<<patternSize<<std::endl;
+	#endif
+
+	//open resources(file(s))
+	// generating a psuedo unique file name               //#CR check if the file already exists
+	std::experimental::filesystem::create_directories("randomFiles");
+	fileName+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
+	outputFile.open(fileName);
+	//seeding random number generator
+	srand(static_cast<unsigned int>(clock()));
+	#ifdef _DebugMode
+	std::cout<<"fileName: "<<fileName<<std::endl;
+	#endif
+	//initializing rows
+	previousRow.resize(patternSize,0);
+    currentRow.resize(patternSize,0);
+    //generate the first row
+    //maybe use threads?
+    randomPatternsThreadArray.resize(noThreads);
+    partPerThread=patternSize/noThreads;
+    for(unsigned short threadIdx=0;threadIdx<noThreads-1;threadIdx++)
+    {
+    	randomPatternsThreadArray[threadIdx]=std::thread(generate_random_row,previousRow,threadIdx*(partPerThread),(threadIdx+1)*(partPerThread));
+    }
+	randomPatternsThreadArray[noThreads-1]=std::thread(generate_random_row,previousRow,(noThreads-1)*(partPerThread),Random_patterns_generator::max((noThreads)*(partPerThread),patternSize));
+    for(unsigned short threadIdx=0;threadIdx<noThreads-1;threadIdx++)
+	{
+		randomPatternsThreadArray[threadIdx].join();
+	}
+//    generate_random_row(previousRow,0,patternSize);
 }
 //
 //Random_patterns_generator::~Random_patterns_generator() {
@@ -115,6 +124,10 @@ bool Random_patterns_generator::savePattern()
 	return 1;
 }
 
+inline unsigned long long Random_patterns_generator::max(unsigned long long frst,unsigned long long& secnd)
+{
+	return (frst>secnd)?frst:secnd;
+	}
 Random_patterns_generator::~Random_patterns_generator() {
 
 	  //close open resources

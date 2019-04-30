@@ -16,10 +16,23 @@
 #include <experimental/filesystem>
 #include "easyLogger/easylogging++.h"
 #include "userInputClass/userInput.h"
-
-
+//
+//
 #define ELPP_THREAD_SAFE
 INITIALIZE_EASYLOGGINGPP
+//inline void initializeLogger()
+//{
+//	    el::Configurations defaultConf;
+//	    defaultConf.setToDefault();
+//	    defaultConf.setGlobally(
+//	                     el::ConfigurationType::Filename,"PatternGenerationLog.log");
+//	    defaultConf.setGlobally(
+//	                    el::ConfigurationType::ToFile,"true");
+//	    defaultConf.setGlobally(
+//	                    el::ConfigurationType::ToStandardOutput,"false");
+//	    el::Loggers::reconfigureLogger("default", defaultConf);
+//	//
+//}
 
 bool valid(const std::vector<unsigned short *> &argList)
 {
@@ -30,6 +43,7 @@ bool valid(const std::vector<unsigned short *> &argList)
 }
 int main() {
 	try{
+//		initializeLogger();
 		unsigned long long gridWidth;
 		unsigned long long noThreads;
 		//declaring a new scope to destroy the variable after i get what i want with them
@@ -51,15 +65,18 @@ int main() {
 			//getting user input while passing callback function with its params
 			inputObj.getInput(inputMethod,"Input the Pattern generator Method,'1' for Random , and '2' for All possible patterns : ",argList,valid);
 		}
-		std::cout<<gridWidth<<noThreads<<inputMethod<<std::endl;
-		//	PatternGeneratorNS::PatternGenerator  *generator =
-		//					PatternGeneratorNS::GeneratorFactory::
-		//					make_generator(PatternGeneratorNS::GeneratorFactory::random_pattern_generator,gridWidth,noThreads);
-		//		generator->generatePattern();
+
+		//getting the generator
+		PatternGeneratorNS::PatternGenerator  *generator =
+			PatternGeneratorNS::GeneratorFactory::
+			make_generator(static_cast <PatternGeneratorNS::GeneratorFactory::generator_type> (inputMethod)
+			,gridWidth,noThreads);
+		//generating the patterns
+		generator->generatePattern();
 	}
 	catch (const std::exception& e)
 	{
-		LOG(ERROR) <<e.what();
+//		LOG(ERROR) <<e.what();
 	}
 	return 0;
 }

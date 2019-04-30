@@ -13,22 +13,17 @@ PatternGenerator * GeneratorFactory::  make_generator(GeneratorFactory::generato
 {
 	switch (GeneratorType)
 	{
+//	LOG(INFO) <<"Instantiating logger ="<<GeneratorType;
 	case GeneratorFactory::random_pattern_generator:
-		return new Random_patterns_generator(patternSize);
+		return new Random_patterns_generator(patternSize,noThreads);
 	break;
 	case GeneratorFactory::all_patterns_generator:
-//		return new All_patterns_generator(patternSize);
+//		return new All_patterns_generator(patternSize,noThreads);
 	break;
 
 	}
 	return nullptr;
 }
 
-
-bool GeneratorFactory::test()
-{
-	std::cout<<"s";
-return 0;
-}
 
 } /* namespace PatternGenerator */
