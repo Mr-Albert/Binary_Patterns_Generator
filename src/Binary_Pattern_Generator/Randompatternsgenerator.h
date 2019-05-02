@@ -32,7 +32,8 @@ protected:
 	std::vector<bool> previousRow,currentRow,randomRow;
 	//resultant file and path
     std::ofstream outputFile;
-    std::string fileName="randomFiles/randomPatternsFile_";
+    std::string directory_path="randomFiles";
+    std::string fileName="randomPatternsFile_";
 	//how many items each thread should work on
     unsigned int partPerThread;
     //pattern generator worker
@@ -48,7 +49,7 @@ protected:
 	inline bool singularity_checker(const bool &binaryInput,unsigned long long &currentRowPosition);
 
 public:
-	Random_patterns_generator(unsigned long long patternSize=1,unsigned short noThreads=1);
+	Random_patterns_generator(unsigned long long patternSize=1,unsigned short noThreads=1,std::string director_path="");
 	//entry point for pattern generation
 	bool generatePattern();
 	virtual ~Random_patterns_generator();

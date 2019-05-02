@@ -11,14 +11,14 @@ debugFlag = -D _testMode
 
 
 SRC=$(wildcard $(MAIN_SRC_PATH)/Binary_Pattern_Generator/*.cpp $(MAIN_SRC_PATH)/userInputClass/*.cpp )
-EASYLOGGERSRC=$(wildcard $(MAIN_SRC_PATH)/easyLogger/*.cc )
+#EASYLOGGERSRC=$(wildcard $(MAIN_SRC_PATH)/easyLogger/*.cc )
 TESTSRC=../src/test.cpp $(wildcard $(MAIN_SRC_PATH)/PatternTester/*.cpp)
 TESTDEBUGSRC=../src/testDebug.cpp
 
 OBJ=$(subst ../src, obj, $(SRC:.cpp=.o))
 TESTOBJ=$(subst ../src, obj, $(TESTSRC:.cpp=.o))
 TESTDEBUGOBJ=$(subst ../src, obj, $(TESTDEBUGSRC:.cpp=.o))
-EASYLOGGEROBJ=$(subst ../src, obj, $(EASYLOGGERSRC:.cc=.o))
+#EASYLOGGEROBJ=$(subst ../src, obj, $(EASYLOGGERSRC:.cc=.o))
 
 #DEBUGFLAG: debugFlag=-D _DebugMode
 #DEBUGFLAG:

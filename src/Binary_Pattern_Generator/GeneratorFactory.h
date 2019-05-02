@@ -19,7 +19,7 @@ private:
 	~GeneratorFactory();
 public:
 	enum generator_type{random_pattern_generator=1,all_patterns_generator=2};
-	static PatternGenerator * make_generator(generator_type GeneratorType,unsigned long long &patternSize,long long unsigned int noThreads=1);
+	static PatternGenerator * make_generator(generator_type GeneratorType,const unsigned long long &patternSize,const long long unsigned int noThreads=1,std::string director_path="");
 	static bool destory_generator(PatternGenerator *Generator);
 };
 

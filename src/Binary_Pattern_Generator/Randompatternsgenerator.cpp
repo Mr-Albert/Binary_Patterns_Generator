@@ -6,10 +6,13 @@
  */
 
 #include "Randompatternsgenerator.h"
+
 namespace PatternGeneratorNS
 {
-Random_patterns_generator::Random_patterns_generator(unsigned long long patternSize,unsigned short noThreads):PatternGenerator(patternSize,noThreads) {
+Random_patterns_generator::Random_patterns_generator(unsigned long long patternSize,unsigned short noThreads,std::string director_path):PatternGenerator(patternSize,noThreads) {
 	try {
+//		LOG(INFO) << "starting patterns";
+
 		//will be removed by the compiler on builds without the _debugMode
 		#ifdef _DebugMode
 			std::cout<<"patternSize ="<<patternSize<<", noOfthreads ="<<noThreads;
@@ -17,8 +20,13 @@ Random_patterns_generator::Random_patterns_generator(unsigned long long patternS
 		//enabling fstream exceptions
 		outputFile.exceptions ( std::ios_base::failbit |
 						std::ios_base::badbit );
+		if(director_path!="")
+		{
+			directory_path=director_path;
+		}
 		//open resources(file(s))  and generating a pseudo unique file name               //#CR check if the file already exists
-		std::experimental::filesystem::create_directories("randomFiles");
+		std::experimental::filesystem::create_directories(directory_path);
+		fileName=directory_path+"/"+fileName;
 		fileName+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
 		#ifdef _DebugMode
 			std::cout<<" , file name "<<fileName<<std::endl;

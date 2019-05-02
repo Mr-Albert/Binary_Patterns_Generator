@@ -15,19 +15,23 @@
 #include<cstdlib>
 #include <experimental/filesystem>
 #include "userInputClass/userInput.h"
-//#include <../loguru_logger/loguru.hpp>
-#include <../loguru_logger/loguru.cpp>
-
-
-
-inline void initializeLogger()
-{
-	loguru::add_file("PatternGeneratorLog.log", loguru::Append, loguru::Verbosity_INFO);
-	// Turn off writing to stderr:
-	loguru::g_stderr_verbosity = loguru::Verbosity_OFF;
-
-
-}
+//#include "easyLogger/easylogging++.h"
+////#define ELPP_THREAD_SAFE
+//INITIALIZE_EASYLOGGINGPP
+//
+//inline void initializeLogger()
+//{
+//	    el::Configurations defaultConf;
+//	    defaultConf.setToDefault();
+//	    defaultConf.setGlobally(
+//	                     el::ConfigurationType::Filename,"PatternGenerationLog.log");
+//	    defaultConf.setGlobally(
+//	                    el::ConfigurationType::ToFile,"true");
+//	    defaultConf.setGlobally(
+//	                    el::ConfigurationType::ToStandardOutput,"true");
+//	    el::Loggers::reconfigureLogger("default", defaultConf);
+//	//
+//}
 
 bool valid(const std::vector<unsigned short *> &argList)
 {
@@ -39,7 +43,7 @@ bool valid(const std::vector<unsigned short *> &argList)
 int main() {
 	try{
 //		initializeLogger();
-		LOG_S(INFO)  << "starting main";
+//		LOG(INFO) << "starting main";
 
 		unsigned long long gridWidth;
 		unsigned long long noThreads;
@@ -74,7 +78,7 @@ int main() {
 	}
 	catch (const std::exception& e)
 	{
-		LOG(ERROR) <<e.what();
+//		LOG(ERROR) <<e.what();
 	}
 	return 0;
 }
