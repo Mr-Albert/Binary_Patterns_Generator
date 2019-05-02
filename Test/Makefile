@@ -3,7 +3,7 @@ CC=g++
 CFLAGS=-c -Wall
 #LDFLAGS=-lSDL -lSDL_gfx
 INCL=-I $(SRC_PATH)include/
-LDFLAGS = -std=c++17 -lstdc++fs -lpthread
+LDFLAGS = -std=c++1y -lpthread -fexceptions -g
 EXE=testRun
 TESTEXE=testDebugRun
 debugFlag = -D _testMode
@@ -24,7 +24,7 @@ EASYLOGGEROBJ=$(subst ../src, obj, $(EASYLOGGERSRC:.cc=.o))
 #DEBUGFLAG:
 #	@echo defining  $(debugFlag) in compiler options
 	
-test: $(EASYLOGGERSRC) $(TESTSRC) $(SRC) $(EXE)
+test: $(EASYLOGGERSRC) $(TESTSRC) $(SRC) $(EASYLOGGERSRC) $(EXE)
 #	@mkdir -p obj
 #	@mkdir -p obj/Binary_Pattern_Generator	
 #	@echo $(TESTSRC)
@@ -42,11 +42,11 @@ testDebug: $(EASYLOGGERSRC) $(TESTDEBUGSRC) $(SRC) $(EASYLOGGERSRC) $(TESTEXE)
 #	@echo $(SRC)
 #	@echo $(OBJ)
 
-$(EXE):  $(TESTOBJ) $(OBJ)
-	$(CC) $(TESTOBJ) $(OBJ) -o $@ $(LDFLAGS)
+$(EXE):  $(TESTOBJ) $(OBJ) $(EASYLOGGEROBJ)
+	$(CC) $(LDFLAGS) $(TESTOBJ) $(EASYLOGGEROBJ) $(OBJ) -o $@ -lstdc++fs
 	
 $(TESTEXE): $(TESTDEBUGOBJ) $(OBJ) $(EASYLOGGEROBJ)
-	$(CC)  $(EASYLOGGEROBJ) $(TESTDEBUGOBJ) $(OBJ)   -o $@	$(LDFLAGS)
+	$(CC)  $(LDFLAGS) $(EASYLOGGEROBJ) $(TESTDEBUGOBJ) $(OBJ)   -o $@ -lstdc++fs
 obj/%.o: ../src/%.cpp
 	@mkdir -p obj
 	@mkdir -p obj/Binary_Pattern_Generator	
@@ -54,13 +54,13 @@ obj/%.o: ../src/%.cpp
 	@mkdir -p obj/PatternTester
 	@mkdir -p obj/userInputClass
 	
-	$(CC) $(debugFlag) $(CFLAGS) $(INCL) -o $@ $<
+	$(CC) -fexceptions $(debugFlag) $(CFLAGS) $(INCL) -o $@ $<
 obj/%.o: ../src/%.cc
 	@mkdir -p obj
 	@mkdir -p obj/Binary_Pattern_Generator	
 	@mkdir -p obj/easyLogger	
 	@mkdir -p obj/PatternTester	
 	@mkdir -p obj/userInputClass	
-	$(CC) $(debugFlag) $(CFLAGS) $(INCL) -o $@ $<
+	$(CC) -fexceptions $(debugFlag) $(CFLAGS) $(INCL) -o $@ $<
 clean:
 	rm -rf run $(EASYLOGGEROBJ) $(TESTOBJ) $(OBJ)

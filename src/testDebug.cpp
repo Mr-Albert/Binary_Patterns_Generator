@@ -14,25 +14,23 @@
 #include <limits>
 #include<cstdlib>
 #include <experimental/filesystem>
-#include "easyLogger/easylogging++.h"
 #include "userInputClass/userInput.h"
-//
-//
-#define ELPP_THREAD_SAFE
+#include "easyLogger/easylogging++.h"
+//#define ELPP_THREAD_SAFE
 INITIALIZE_EASYLOGGINGPP
-//inline void initializeLogger()
-//{
-//	    el::Configurations defaultConf;
-//	    defaultConf.setToDefault();
-//	    defaultConf.setGlobally(
-//	                     el::ConfigurationType::Filename,"PatternGenerationLog.log");
-//	    defaultConf.setGlobally(
-//	                    el::ConfigurationType::ToFile,"true");
-//	    defaultConf.setGlobally(
-//	                    el::ConfigurationType::ToStandardOutput,"false");
-//	    el::Loggers::reconfigureLogger("default", defaultConf);
-//	//
-//}
+inline void initializeLogger()
+{
+	    el::Configurations defaultConf;
+	    defaultConf.setToDefault();
+	    defaultConf.setGlobally(
+	                     el::ConfigurationType::Filename,"PatternGenerationLog.log");
+	    defaultConf.setGlobally(
+	                    el::ConfigurationType::ToFile,"true");
+	    defaultConf.setGlobally(
+	                    el::ConfigurationType::ToStandardOutput,"true");
+	    el::Loggers::reconfigureLogger("default", defaultConf);
+	//
+}
 
 bool valid(const std::vector<unsigned short *> &argList)
 {
@@ -44,6 +42,8 @@ bool valid(const std::vector<unsigned short *> &argList)
 int main() {
 	try{
 //		initializeLogger();
+		LOG(INFO) << "starting main";
+
 		unsigned long long gridWidth;
 		unsigned long long noThreads;
 		//declaring a new scope to destroy the variable after i get what i want with them
@@ -73,10 +73,11 @@ int main() {
 			,gridWidth,noThreads);
 		//generating the patterns
 		generator->generatePattern();
+		delete generator;
 	}
 	catch (const std::exception& e)
 	{
-//		LOG(ERROR) <<e.what();
+		LOG(ERROR) <<e.what();
 	}
 	return 0;
 }

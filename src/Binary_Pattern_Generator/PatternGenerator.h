@@ -9,7 +9,11 @@
 #define PATTERNGENERATOR_H_
 //#include "Allpatternsgenerator.h"
 #include<vector>
-
+//#ifndef ELPP_THREAD_SAFE
+//#include "../easyLogger/easylogging++.h"
+//#define ELPP_THREAD_SAFE
+//INITIALIZE_EASYLOGGINGPP
+//#endif
 //#ifndef ELPP_THREAD_SAFE
 //#include "../easyLogger/easylogging++.h"
 //#define ELPP_THREAD_SAFE
