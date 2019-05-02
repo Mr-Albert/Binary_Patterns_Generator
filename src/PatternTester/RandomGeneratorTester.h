@@ -16,11 +16,18 @@
 #include <chrono>
 #include <iostream>
 #include <vector>
+#include <experimental/filesystem>
+#include <sstream>
+#include <string>
+#include <ios>
+#include <limits>
+#include<cstdlib>
+#include <fstream>
 
-namespace PatternGeneratorTester {
+namespace PatternGeneratorTesterNS {
 
 class RandomGeneratorTester {
-	PatternGeneratorNS::PatternGenerator  *generator ;
+	PatternGeneratorNS::PatternGenerator  *generator=nullptr ;
 	unsigned short generatorType;
 	std::string directory_path;
 

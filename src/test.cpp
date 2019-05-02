@@ -9,19 +9,22 @@
 #include "Binary_pattern_generator/GeneratorFactory.h"
 #include "PatternTester/RandomGeneratorTester.h"
 #include<iostream>
+#include<string>
 int main()
 {
 	try{
-
-		PatternGeneratorTester::RandomGeneratorTester generatorTest(1,"randomGeneratorTest");
-		generatorTest.testThreadsSpeed(10,100);
+		std::cout<<"constructing\n";
+		std::string dir="randomGeneratorTest";
+		PatternGeneratorTesterNS::RandomGeneratorTester generatorTest(1,dir);
+		std::cout<<"constructed\n";
+		generatorTest.testThreadsSpeed(10,1000);
 	}
 	catch(...)
 	{
 		std::cout<<"exception\n";
 	}
 
-
+return 1;
 }
 
 
