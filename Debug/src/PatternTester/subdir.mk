@@ -4,15 +4,12 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/PatternTester/PatternTester.cpp \
 ../src/PatternTester/RandomGeneratorTester.cpp 
 
 OBJS += \
-./src/PatternTester/PatternTester.o \
 ./src/PatternTester/RandomGeneratorTester.o 
 
 CPP_DEPS += \
-./src/PatternTester/PatternTester.d \
 ./src/PatternTester/RandomGeneratorTester.d 
 
 

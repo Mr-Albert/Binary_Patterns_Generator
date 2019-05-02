@@ -24,7 +24,7 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src/Binary_Pattern_Generator \
-src \
 src/PatternTester \
 src/easyLogger \
+src \
 

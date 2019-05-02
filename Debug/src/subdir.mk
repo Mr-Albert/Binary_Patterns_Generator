@@ -4,17 +4,14 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/Binary_Patterns_Generator.cpp \
 ../src/test.cpp \
 ../src/testDebug.cpp 
 
 OBJS += \
-./src/Binary_Patterns_Generator.o \
 ./src/test.o \
 ./src/testDebug.o 
 
 CPP_DEPS += \
-./src/Binary_Patterns_Generator.d \
 ./src/test.d \
 ./src/testDebug.d 
 

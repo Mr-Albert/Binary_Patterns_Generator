@@ -22,7 +22,7 @@
 #include <limits>
 #include<cstdlib>
 #include <fstream>
-
+#include<sstream>
 namespace PatternGeneratorTesterNS {
 
 class RandomGeneratorTester {
@@ -33,7 +33,7 @@ class RandomGeneratorTester {
 public:
 	RandomGeneratorTester(unsigned short generatorType,std::string directory_path);
 	bool testThreadsSpeed(unsigned short threadRange=4,unsigned short patternRange=10000);
-
+	bool patternCorrectnessTester(unsigned short threadRange=3,unsigned short patternRange=10000);
    ~RandomGeneratorTester();
 };
 

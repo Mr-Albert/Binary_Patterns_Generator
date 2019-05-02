@@ -88,47 +88,55 @@ bool RandomGeneratorTester::testThreadsSpeed(unsigned short threadRange,unsigned
 //
 //
 //}
+// t-test grab squares of the patterns and count the number of 1s for al..
+//..resolutions squares in the pattern..should it follow poisson dist?
+
 //RandomGeneratorTester::patternRandomnessTester(unsigned short patternRange=10000) {
 //	// TODO Auto-generated constructor stub
 //
 //
 //}
-RandomGeneratorTester::patternCorrectnessTester(unsigned short patternRange=10000) {
+bool RandomGeneratorTester::patternCorrectnessTester(unsigned short threadRange,unsigned short patternRange) {
 //generate lots of files
 	try {
-			std::string statfileName="tempTests/"+directory_path+"/";
-			for(unsigned short int testNo=1;testNo<1000;testNo++)
+			std::string directory_path_test="tempTests/"+directory_path+"/";
+			for(unsigned short int testNo=1;testNo<100;testNo++)
 			{
 				unsigned int gridWidth=rand()%patternRange+1;
 				unsigned short noThreads=rand()%threadRange+1;
 				generator =
 						PatternGeneratorNS::GeneratorFactory::
 						make_generator(static_cast <PatternGeneratorNS::GeneratorFactory::generator_type> (generatorType)
-						,gridWidth,noThreads,directory_path);
+						,gridWidth,noThreads,directory_path_test);
 					//generating the patterns
 				generator->generatePattern();
-				std::cout<<"finsihed a test"<<std::endl;
+//				std::cout<<"finsihed a test"<<std::endl;
 				delete generator;
 			}
 
 			//read files to test for correctness
 			//for each file
-			{
+		    for(auto& p: std::experimental::filesystem::directory_iterator(directory_path_test))
+		    {
+		        std::cout << p.path() << '\n';
 
-				do
-				{
-					bool cell;
-				    istringstream iss(str);
-				    getline(iss, cell, ',');
-				    do{
-				    currentRow.push_back(cell);
-				    }while (getline(iss, cell, ','));
-				    //check current row with previous row
-
-				    //swap current with previous
-
-				}while (getline(data, str));
-			}
+		    }
+//			{
+//
+//				do
+//				{
+//					bool cell;
+//				    std::istringstream iss(str);
+//				    getline(iss, cell, ',');
+//				    do{
+//				    currentRow.push_back(cell);
+//				    }while (getline(iss, cell, ','));
+//				    //check current row with previous row
+//
+//				    //swap current with previous
+//
+//				}while (getline(data, str));
+//			}
 //			std::experimental::filesystem::remove_all(directory_path);
 		}
 		catch(...)
