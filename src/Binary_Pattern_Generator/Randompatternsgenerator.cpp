@@ -6,8 +6,6 @@
  */
 
 #include "Randompatternsgenerator.h"
-extern INFO;
-extern LOG;
 namespace PatternGeneratorNS
 {
 Random_patterns_generator::Random_patterns_generator(unsigned long long patternSize,unsigned short noThreads):PatternGenerator(patternSize,noThreads) {
@@ -36,7 +34,7 @@ Random_patterns_generator::Random_patterns_generator(unsigned long long patternS
 		randomPatternsThreadArray.resize(noThreads);
 	    partPerThread=patternSize/noThreads;
 	    generate_random_pattern();
-	    LOG(INFO)<<"Started a new random binary pattern generator with patternSize = "<<patternSize<<", noThread = "<<noThreads<<", row part per thread = "<<partPerThread<<"\n";
+//	    LOG(INFO)<<"Started a new random binary pattern generator with patternSize = "<<patternSize<<", noThread = "<<noThreads<<", row part per thread = "<<partPerThread<<"\n";
 		//generate the first row
 	    for(unsigned short threadIdx=0;threadIdx<noThreads-1;threadIdx++)
 	    {
