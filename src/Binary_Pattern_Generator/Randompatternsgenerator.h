@@ -22,13 +22,26 @@
 
 namespace PatternGeneratorNS
 {
+/*
+ *
+ * This class generates two valid rows and writes into the file each row....#CR allow for multiple buffered rows instead of one row?
+ *
+ * Another approach than the one taken here is to generate all rows
+ * (write them to desk if they are too large)
+ * and then detect the "singularity" pattern using a 2D (or reduce to 1D) none-square..
+ * ..pattern matching algorithm for binary alphabet and then remove those occurrences
+ * (but i don't think it will allow for parallelism nor more read/write efficiency)...needs testing
+ *
+ */
 class Random_patterns_generator : public  PatternGenerator {
 protected:
 	//threads array
 	std::vector<std::thread> randomPatternsThreadArray;
-	//<shared memory>currentRow vector is the currently row being generated
-	//<shared memory>previousRow is the last completed row that was generated,needed for validation
-	//<shared memory> thread-shared random row-data
+	/*
+	 * <shared memory>currentRow vector is the currently row being generated
+	 * <shared memory>previousRow is the last completed row that was generated,needed for validation
+	 * <shared memory> thread-shared random row-data
+	 */
 	std::vector<bool> previousRow,currentRow,randomRow;
 	//resultant file and path
     std::ofstream outputFile;
@@ -45,7 +58,7 @@ protected:
 	inline unsigned long long max(unsigned long long frst,unsigned long long& secnd);
 	//saves rows into the resultant file
 	bool savePattern();
-	//checks for singularitys
+	//checks for singularities
 	inline bool singularity_checker(const bool &binaryInput,unsigned long long &currentRowPosition);
 
 public:

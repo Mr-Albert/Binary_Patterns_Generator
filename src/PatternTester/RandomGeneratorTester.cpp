@@ -15,6 +15,8 @@ RandomGeneratorTester::RandomGeneratorTester(unsigned short generatorType,std::s
 		srand(static_cast<unsigned int>(clock()));
 		std::experimental::filesystem::create_directories(directory_path);
 		std::experimental::filesystem::create_directories("statisics/"+directory_path);
+		std::cout<<"created directories\n";
+
 	}
 	catch(const std::exception &e)
 	{
@@ -34,6 +36,7 @@ bool RandomGeneratorTester::testThreadsSpeed(unsigned short threadRange,unsigned
 		statoutputFile.open(statfileName);
 		std::cout<<statfileName<<std::endl;
 		statoutputFile<<"threads(no),pattern width,time(ns)\n";
+		std::cout<<"starting tests"<<std::endl;
 
 		for(unsigned short int testNo=1;testNo<1000;testNo++)
 		{
@@ -48,6 +51,7 @@ bool RandomGeneratorTester::testThreadsSpeed(unsigned short threadRange,unsigned
 				//generating the patterns
 			generator->generatePattern();
 			auto end = std::chrono::high_resolution_clock::now();
+			std::cout<<"finsihed a test"<<std::endl;
 			statistics_matrix[noThreads-1][gridWidth-1].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count());
 			delete generator;
 		}
@@ -73,9 +77,9 @@ bool RandomGeneratorTester::testThreadsSpeed(unsigned short threadRange,unsigned
 		std::cout<<"closing resources\n";
 		statoutputFile.close();
 	}
-	catch(const std::exception &e)
+	catch(...)
 		{
-			std::cout<<"\nexception,"<<e.what()<<"\n";
+			std::cout<<"\nexception,"<<std::endl;
 		}
 	return 1;
 }
@@ -89,11 +93,56 @@ bool RandomGeneratorTester::testThreadsSpeed(unsigned short threadRange,unsigned
 //
 //
 //}
-//RandomGeneratorTester::patternCorrectnessTester(unsigned short patternRange=10000) {
-//	// TODO Auto-generated constructor stub
-//
-//
-//}
+RandomGeneratorTester::patternCorrectnessTester(unsigned short patternRange=10000) {
+//generate lots of files
+	try {
+			std::string statfileName="tempTests/"+directory_path+"/";
+			for(unsigned short int testNo=1;testNo<1000;testNo++)
+			{
+				unsigned int gridWidth=rand()%patternRange+1;
+				unsigned short noThreads=rand()%threadRange+1;
+				generator =
+						PatternGeneratorNS::GeneratorFactory::
+						make_generator(static_cast <PatternGeneratorNS::GeneratorFactory::generator_type> (generatorType)
+						,gridWidth,noThreads,directory_path);
+					//generating the patterns
+				generator->generatePattern();
+				std::cout<<"finsihed a test"<<std::endl;
+				delete generator;
+			}
+
+			//read files to test for correctness
+			//for each file
+			{
+
+				do
+				{
+					bool cell;
+				    istringstream iss(str);
+				    getline(iss, cell, ',');
+				    do{
+				    currentRow.push_back(cell);
+				    }while (getline(iss, cell, ','));
+				    //check current row with previous row
+
+				    //swap current with previous
+
+				}while (getline(data, str));
+			}
+//			std::experimental::filesystem::remove_all(directory_path);
+		}
+		catch(...)
+			{
+				std::cout<<"\nexception,"<<std::endl;
+			}
+
+
+
+
+//delete test directory
+
+
+}
 
 RandomGeneratorTester::~RandomGeneratorTester() {
 	// TODO Auto-generated destructor stub

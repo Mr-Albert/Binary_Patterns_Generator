@@ -1,7 +1,7 @@
 /*
  * GeneratorFactory.h
  *
- *  Created on: Apr 23, 2019
+ *  Created on: Apr 27, 2019
  *      Author: Mina
  */
 
@@ -9,17 +9,15 @@
 #define GENERATORFACTORY_H_
 #include "Randompatternsgenerator.h"
 #include "allpatternsgenerator.h"
-
 namespace PatternGeneratorNS {
-
 class GeneratorFactory {
-
 private:
 	GeneratorFactory();
 	~GeneratorFactory();
 public:
 	enum generator_type{random_pattern_generator=1,all_patterns_generator=2};
 	static PatternGenerator * make_generator(generator_type GeneratorType,const unsigned long long &patternSize,const long long unsigned int noThreads=1,std::string director_path="");
+	//factories destroy what factories created
 	static bool destory_generator(PatternGenerator *Generator);
 };
 
