@@ -98,9 +98,9 @@ bool FileWriter::savePatterns(std::vector<bool>& toBeWrittenVector)
 
 FileWriter::~FileWriter() {
 	std::cout<<"closing fileWriter"<<std::endl;
+	outputFile.flush();
 	delete []vecBuffer;
 	delete []charBuffer;
-//	outputFile.flush();
 //	outputFile.close();
 }
 
