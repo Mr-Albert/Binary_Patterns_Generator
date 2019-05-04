@@ -116,27 +116,27 @@ bool RandomGeneratorTester::patternCorrectnessTester(unsigned short threadRange,
 
 			//read files to test for correctness
 			//for each file
+			std::vector<bool> currentRow;
 		    for(auto& p: std::experimental::filesystem::directory_iterator(directory_path_test))
-		    {
-		        std::cout << p.path() << '\n';
+			{
+		    	std::ifstream file;
+		    	file.open(p.path());
+		    	std::string str;
+		    	std::getline(file, str);
+				do
+				{
+					std::string cell;
+				    std::istringstream iss(str);
+				    std::getline(iss, cell, ',');
+				    do{
+				    currentRow.push_back((cell=="0")?0:1);
+				    }while (std::getline(iss, cell, ','));
+				    //check current row with previous row
 
-		    }
-//			{
-//
-//				do
-//				{
-//					bool cell;
-//				    std::istringstream iss(str);
-//				    getline(iss, cell, ',');
-//				    do{
-//				    currentRow.push_back(cell);
-//				    }while (getline(iss, cell, ','));
-//				    //check current row with previous row
-//
-//				    //swap current with previous
-//
-//				}while (getline(data, str));
-//			}
+				    //swap current with previous
+
+				}while (getline(file, str));
+			}
 //			std::experimental::filesystem::remove_all(directory_path);
 		}
 		catch(...)
@@ -146,7 +146,7 @@ bool RandomGeneratorTester::patternCorrectnessTester(unsigned short threadRange,
 
 
 
-
+return 0;
 //delete test directory
 
 

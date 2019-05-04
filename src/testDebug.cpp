@@ -67,7 +67,10 @@ int main() {
 		//generating the patterns
 		generator->generatePattern();
 		//#CR give it to the factory's terminator function
-		delete generator;
+//		delete generator;
+		PatternGeneratorNS::GeneratorFactory::destory_generator(generator);
+		std::cin.get();
+		std::cin.get();
 	}
 	catch (const std::exception& e)
 	{

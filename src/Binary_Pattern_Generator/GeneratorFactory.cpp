@@ -23,5 +23,11 @@ PatternGenerator * GeneratorFactory::  make_generator(GeneratorFactory::generato
 	}
 	return nullptr;
 }
+bool GeneratorFactory::destory_generator(PatternGenerator *Generator)
+{
+	delete Generator;
+	return 0;
+}
+
 
 } /* namespace PatternGenerator */

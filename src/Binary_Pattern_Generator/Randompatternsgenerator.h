@@ -19,6 +19,7 @@
 #include <experimental/filesystem>
 #include <thread>
 #include <stdexcept>
+#include "../FileWriter/FileWriter.h"
 
 namespace PatternGeneratorNS
 {
@@ -34,21 +35,25 @@ namespace PatternGeneratorNS
  *
  */
 class Random_patterns_generator : public  PatternGenerator {
+
+//after removing the save responsibility from this class,the created writer class was made into a friend class(to access the prev row)
+friend FileWriter;
+FileWriter *fWriter;
 protected:
-	//threads array
-	std::vector<std::thread> randomPatternsThreadArray;
 	/*
 	 * <shared memory>currentRow vector is the currently row being generated
 	 * <shared memory>previousRow is the last completed row that was generated,needed for validation
 	 * <shared memory> thread-shared random row-data
+	 * randomPatternsThreadArray : threads holder
 	 */
 	std::vector<bool> previousRow,currentRow,randomRow;
-	//resultant file and path
-    std::ofstream outputFile;
-    std::string directory_path="randomFiles";
-    std::string fileName="randomPatternsFile_";
+	std::vector<std::thread> randomPatternsThreadArray;
+//	char * previousRowChar;
+//	char *charBuffer;
+//	std::string charType="01,";
+//	char *previousRowCharBuffer;
 	//how many items each thread should work on
-    unsigned int partPerThread;
+    unsigned long long partPerThread;
     //pattern generator worker
 	bool generatePatternWorker();
 	//generate random binary inside shared mem randomRow
@@ -56,12 +61,13 @@ protected:
 	//generate random row of binaries
 	void generate_random_row(std::vector<bool> &destinationRow,unsigned long long rowStart,unsigned long long rowEnd);
 	inline unsigned long long max(unsigned long long frst,unsigned long long& secnd);
-	//saves rows into the resultant file
-	bool savePattern();
 	//checks for singularities
 	inline bool singularity_checker(const bool &binaryInput,unsigned long long &currentRowPosition);
 
 public:
+	unsigned long long threadsTime=0,saveTime=0;
+	std::chrono::high_resolution_clock::time_point conststart ;
+	std::chrono::high_resolution_clock::time_point constend ;
 	Random_patterns_generator(unsigned long long patternSize=1,unsigned short noThreads=1,std::string director_path="");
 	//entry point for pattern generation
 	bool generatePattern();

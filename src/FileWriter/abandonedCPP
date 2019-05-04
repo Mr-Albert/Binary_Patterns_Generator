@@ -1,0 +1,167 @@
+/*
+ * FileWriter.cpp
+ *
+ *  Created on: May 3, 2019
+ *      Author: Mina
+ */
+
+#include "FileWriter.h"
+
+namespace PatternGeneratorNS {
+//still slow
+FileWriter::FileWriter(unsigned long long bufferSize,std::string fileName,std::string directory):currentBufferIdx(0),bufferSize(bufferSize) {
+	//reserving the buffer
+	charBuffer= new char[bufferSize]; //doesnt make a diff
+	vecBuffer= new char [2048 * 2048];
+	outputFile.rdbuf()->pubsetbuf(vecBuffer, sizeof(vecBuffer));
+	//open resources(file(s))  and generating a pseudo unique file name               //#CR check if the file already exists
+	std::experimental::filesystem::create_directories(directory);
+	fileName=directory+"/"+fileName;
+	fileName+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
+	#ifdef _DebugMode
+		std::cout<<" , file name "<<fileName<<std::endl;
+	#endif
+	//enabling fstream exceptions
+	outputFile.exceptions( std::ios_base::failbit |std::ios_base::badbit );
+	outputFile.open(fileName,std::ios::out | std::ios::binary);
+
+}
+//may be make it a tempelate for extendability
+//bool FileWriter::savePattern(std::vector<bool>& toBeWrittenVector)
+//{
+//	/*
+//	 *
+//	 * this funcntion should be made in its own class---done
+//	 * (pattern generator should only generate patterns and not responsible for saving them)
+//	 * and taking a stream & as parameter for better extendibility
+//	 * (closed for mod ,open for extend principle )
+//	 *
+//	 */
+//	#ifdef _DebugMode
+//	std::cout<<"entering the save previous row function"<<std::endl;
+//	#endif
+////	auto PatternsStart = std::chrono::high_resolution_clock::now();
+//	try{
+////		outputFile.write(previousRowChar,(patternSize*2)-1);
+//		unsigned long long fileInpurRowIdx=0;
+//		for(;fileInpurRowIdx<toBeWrittenVector.size()-1;fileInpurRowIdx++)
+//		{
+//			if(currentBufferIdx>=bufferSize-1)
+//			{
+//				flushBuffer(currentBufferIdx);
+//			}
+//			charBuffer[currentBufferIdx++]=serialize(toBeWrittenVector[fileInpurRowIdx]);
+// 			charBuffer[currentBufferIdx++]=serialize(",");
+//
+//			#ifdef _DebugMode
+//			std::cout<<toBeWrittenVector[fileInpurRowIdx]<<",";
+//			#endif
+//		}
+//		#ifdef _DebugMode
+//		std::cout<<previousRow[fileInpurRowIdx]<<"\n";
+//		#endif
+//		//output last element with a new line without a flush
+//		charBuffer[currentBufferIdx++]=serialize(toBeWrittenVector[fileInpurRowIdx]);
+//		charBuffer[currentBufferIdx++]=serialize("\n");
+//
+////		flushBuffer(currentBufferIdx);
+//		//vector bool is a specializaiton of vector that saves spaces and returns a temp obj..so no address to elem,cant use the following to speed up writing
+//		//outputFile.write(reinterpret_cast<const char*>(&previousRow[0]),previousRow.size()* sizeof(bool));
+//
+//	}
+//	catch (const std::exception &e)
+//	{
+//		//		LOG(INFO)<<e.what()<<std::endl;
+//	}
+////	auto PatternsEnd = std::chrono::high_resolution_clock::now();
+////	saveTime+=std::chrono::duration_cast<std::chrono::nanoseconds>(PatternsEnd - PatternsStart).count();
+//
+//	return 1;
+//}
+bool FileWriter::flushBuffer(unsigned long long &cbufferSize)
+{
+//	std::cout<<"flushing "<<cbufferSize<<std::endl;
+
+//	std::cout<<"finished"<<std::endl;
+	outputFile.write(charBuffer,cbufferSize);
+	cbufferSize=0;
+	return 1;
+
+}
+inline char FileWriter::serialize( const bool &inputBool)
+{
+	return alphabet[inputBool];
+}
+inline char FileWriter::serialize(const char *s)
+{
+	return std::string(s)[0];
+}
+
+//overloading for a faster implementation but needs changes in the pattern generation class
+//blazing fast!!
+FileWriter::FileWriter(std::string fileName,std::string directory) {
+	//reserving the buffer
+	vecBuffer= new char [4048 * 4048];
+	outputFile.rdbuf()->pubsetbuf(vecBuffer, sizeof(vecBuffer));
+	//open resources(file(s))  and generating a pseudo unique file name               //#CR check if the file already exists
+	std::experimental::filesystem::create_directories(directory);
+	fileName=directory+"/"+fileName;
+	fileName+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
+	#ifdef _DebugMode
+		std::cout<<" , file name "<<fileName<<std::endl;
+	#endif
+	//enabling fstream exceptions
+	outputFile.exceptions( std::ios_base::failbit |std::ios_base::badbit );
+	outputFile.open(fileName,std::ios::out | std::ios::binary);
+
+}
+//blazing fast!!
+bool FileWriter::savePattern(char * toBeWrittenVector,unsigned long long &size)
+{
+	/*
+	 *
+	 * this funcntion should be made in its own class---done
+	 * (pattern generator should only generate patterns and not responsible for saving them)
+	 * and taking a stream & as parameter for better extendibility
+	 * (closed for mod ,open for extend principle )
+	 *
+	 */
+	#ifdef _DebugMode
+	std::cout<<"entering the save previous row function"<<std::endl;
+	#endif
+	//	auto PatternsStart = std::chrono::high_resolution_clock::now();
+	try{
+		outputFile.write(toBeWrittenVector,size);
+		outputFile.write(newLineChar,1);
+	}
+	catch (const std::exception &e)
+	{
+		std::cout<<e.what()<<std::endl;
+	}
+//	auto PatternsEnd = std::chrono::high_resolution_clock::now();
+//	saveTime+=std::chrono::duration_cast<std::chrono::nanoseconds>(PatternsEnd - PatternsStart).count();
+
+	return 1;
+}
+
+
+bool FileWriter::savePattern(std::vector<bool>& toBeWrittenVector)
+{
+	for(unsigned long long i=0,j=0;j<bufferSize/2&&i<bufferSize;i++,j++)
+	{
+		charBuffer[j]=alphabet[toBeWrittenVector[i]];
+		charBuffer[++j]=",";
+	}
+	savePattern(charBuffer,bufferSize);
+}
+
+FileWriter::~FileWriter() {
+//	std::cout<<"closing "<<currentBufferIdx<<std::endl;
+//	flushBuffer(currentBufferIdx);
+//	std::cout<<"closings"<<std::endl;
+	outputFile.close();
+
+
+}
+
+} /* namespace PatternGeneratorNS */

@@ -1,0 +1,39 @@
+/*
+ * FileWriter.h
+ *
+ *  Created on: May 3, 2019
+ *      Author: Mina
+ */
+
+#ifndef FILEWRITER_FILEWRITER_H_
+#define FILEWRITER_FILEWRITER_H_
+#include <fstream>
+#include<string>
+#include <experimental/filesystem>
+#include <vector>
+#include <iostream>
+namespace PatternGeneratorNS {
+
+class FileWriter {
+private:
+	std::ofstream outputFile;
+	unsigned long long currentBufferIdx,bufferSize;
+	bool flushBuffer(unsigned long long &bufferSize);
+	inline char serialize( const bool &inputBool);
+	inline char serialize( const char* s);
+	char *charBuffer;
+	char *vecBuffer;
+	std::string alphabet="01";
+	char *newLineChar="\n";
+
+public:
+	FileWriter(unsigned long long bufferSize,std::string fileName="file_",std::string directory="..");
+	FileWriter(std::string fileName="file_",std::string directory="..");
+	bool savePattern(std::vector<bool>& toBeWrittenVector);
+	bool savePattern(char * toBeWrittenVector,unsigned long long &size);
+	virtual ~FileWriter();
+};
+
+} /* namespace PatternGeneratorNS */
+
+#endif /* FILEWRITER_FILEWRITER_H_ */

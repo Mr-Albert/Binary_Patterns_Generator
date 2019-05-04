@@ -10,6 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include src/easyLogger/subdir.mk
 -include src/PatternTester/subdir.mk
+-include src/FileWriter/subdir.mk
 -include src/Binary_Pattern_Generator/subdir.mk
 -include src/subdir.mk
 -include subdir.mk

@@ -11,26 +11,24 @@ namespace PatternGeneratorNS
 {
 Random_patterns_generator::Random_patterns_generator(unsigned long long patternSize,unsigned short noThreads,std::string director_path):PatternGenerator(patternSize,noThreads) {
 	try {
+		fWriter= new FileWriter(patternSize,"test","speedncorrectness");
+//		previousRowChar=new char[patternSize*2];
+		conststart = std::chrono::high_resolution_clock::now();
+//		previousRowCharBuffer = new char [patternSize];
 		//		LOG(INFO) << "starting patterns";
 		//will be removed by the compiler on builds without the _debugMode
 		#ifdef _DebugMode
 			std::cout<<"patternSize ="<<patternSize<<", noOfthreads ="<<noThreads;
 		#endif
-		//enabling fstream exceptions
-		outputFile.exceptions ( std::ios_base::failbit |
-						std::ios_base::badbit );
-		if(director_path!="")
-		{
-			directory_path=director_path;
-		}
+
 		//open resources(file(s))  and generating a pseudo unique file name               //#CR check if the file already exists
-		std::experimental::filesystem::create_directories(directory_path);
-		fileName=directory_path+"/"+fileName;
-		fileName+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
-		#ifdef _DebugMode
-			std::cout<<" , file name "<<fileName<<std::endl;
-		#endif
-		outputFile.open(fileName);
+//		std::experimental::filesystem::create_directories(directory_path);
+//		fileName=directory_path+"/"+fileName;
+//		fileName+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
+//		#ifdef _DebugMode
+//			std::cout<<" , file name "<<fileName<<std::endl;
+//		#endif
+//		outputFile.open(fileName,std::ios::out | std::ios::binary);
 		//seeding random number generator
 		srand(static_cast<unsigned int>(clock()));
 		//initializing rows
@@ -43,6 +41,7 @@ Random_patterns_generator::Random_patterns_generator(unsigned long long patternS
 	    generate_random_pattern();
 	    //	   LOG(INFO)<<"Started a new random binary pattern generator with patternSize = "<<patternSize<<", noThread = "<<noThreads<<", row part per thread = "<<partPerThread<<"\n";
 		//generate the first row
+		auto threadsStart = std::chrono::high_resolution_clock::now();
 	    for(unsigned short threadIdx=0;threadIdx<noThreads-1;threadIdx++)
 	    {
 	    	randomPatternsThreadArray[threadIdx]=std::thread(generate_random_row,this,std::ref(previousRow),threadIdx*(partPerThread),(threadIdx+1)*(partPerThread));
@@ -53,6 +52,9 @@ Random_patterns_generator::Random_patterns_generator(unsigned long long patternS
 		{
 			randomPatternsThreadArray[threadIdx].join();
 		}
+		auto threadsEnd = std::chrono::high_resolution_clock::now();
+
+		threadsTime+=std::chrono::duration_cast<std::chrono::nanoseconds>(threadsEnd - threadsStart).count();
 		#ifdef _DebugMode
 			std::cout<<"constructor finished ,with row parts per thread"<<partPerThread<<std::endl;
 		#endif
@@ -115,9 +117,17 @@ void Random_patterns_generator::generate_random_row(std::vector<bool> &destinati
 		#ifdef _DebugMode
 			std::cout<<"Thread ID: "<<std::this_thread::get_id()<<" with params (rowStart = "<<rowStart<<", rowEnd = "<<rowEnd<<" )\n";
 		#endif
+		//fixed for multiple threads
+//		unsigned long long commaOffset=rowStart*2;
 		for(;rowStart<rowEnd;rowStart++)
 		{
 			destinationRow[rowStart]=singularity_checker(randomRow[rowStart],rowStart);
+
+//			previousRowChar[rowStart+(commaOffset++)]=charType[destinationRow[rowStart]];
+//			previousRowChar[rowStart+(commaOffset)]=charType[2];
+//			std::cout<<"commaOffset"<<commaOffset<<" ,roeStart: "<<rowStart<<std::endl;
+//			std::cout<<previousRowChar[rowStart+commaOffset-1]<<" "<<previousRowChar[rowStart+commaOffset]<<std::endl;
+//			std::cout<<charType[2]<<std::endl;
 		}
 	}
 	catch(const std::exception &e)
@@ -138,7 +148,10 @@ bool Random_patterns_generator::generatePattern()
 		 // generate Current row
 		 for(unsigned long long rowIdx=1;rowIdx<patternSize;rowIdx++)
 		 {
+				std::thread backGroundWriterThread=std::thread(&FileWriter::savePatterns,fWriter,std::ref(previousRow));
 			 generate_random_pattern();
+				auto threadsStart = std::chrono::high_resolution_clock::now();
+
 			 for(unsigned short threadIdx=0;threadIdx<noThreads-1;threadIdx++)
 			{
 				randomPatternsThreadArray[threadIdx]=std::thread(generate_random_row,this,std::ref(currentRow),threadIdx*(partPerThread),(threadIdx+1)*(partPerThread));
@@ -149,7 +162,17 @@ bool Random_patterns_generator::generatePattern()
 			{
 				randomPatternsThreadArray[threadIdx].join();
 			}
-		  savePattern();
+			auto threadsEnd = std::chrono::high_resolution_clock::now();
+			threadsTime+=std::chrono::duration_cast<std::chrono::nanoseconds>(threadsEnd - threadsStart).count();
+			backGroundWriterThread.join();
+//		  savePattern();
+//			for(unsigned long long i=0;i<patternSize;i++)
+//			{
+//				previousRowCharBuffer[i]=charType[previousRow[i]];
+//			}
+//			fWriter.savePattern(previousRowCharBuffer,patternSize);
+//			fWriter.savePattern(previousRow);
+
 		  // make current row the previous row O(1)
 		  previousRow.swap(currentRow);
 		 }
@@ -177,40 +200,6 @@ inline void Random_patterns_generator::generate_random_pattern()
 		randomRow[randomIdx]=rand()%2;
 	}
 }
-bool Random_patterns_generator::savePattern()
-{
-	/*
-	 *
-	 * this funcntion should be made in its own class
-	 * (pattern generator should only generate patterns and not responsible for saving them)
-	 * and taking a stream & as parameter for better extendibility
-	 * (closed for mod ,open for extend principle )
-	 *
-	 */
-	#ifdef _DebugMode
-	std::cout<<"entering the save previous row function"<<std::endl;
-	#endif
-	try{
-		unsigned long long fileInpurRowIdx=0;
-		for(;fileInpurRowIdx<previousRow.size()-1;fileInpurRowIdx++)
-		{
-			outputFile<<previousRow[fileInpurRowIdx]<<",";
-			#ifdef _DebugMode
-			std::cout<<previousRow[fileInpurRowIdx]<<",";
-			#endif
-		}
-		//output last element with a new line without a flush
-		#ifdef _DebugMode
-		std::cout<<previousRow[fileInpurRowIdx]<<"\n";
-		#endif
-		outputFile<<previousRow[fileInpurRowIdx]<<"\n";
-	}
-	catch (const std::exception &e)
-	{
-		//		LOG(INFO)<<e.what()<<std::endl;
-	}
-	return 1;
-}
 
 inline unsigned long long Random_patterns_generator::max(unsigned long long frst,unsigned long long& secnd)
 {
@@ -219,15 +208,27 @@ inline unsigned long long Random_patterns_generator::max(unsigned long long frst
 Random_patterns_generator::~Random_patterns_generator() {
 
 	//saving the last row
-	savePattern();
+//	savePattern();
+//	for(unsigned long long i=0;i<patternSize;i++)
+//				{
+//					previousRowCharBuffer[i]=charType[previousRow[i]];
+////					previousRowCharBuffer[i]=charType[3];
+//
+//				}
+//	fWriter.savePattern(previousRowCharBuffer,patternSize);
+		fWriter->savePatterns(previousRow);
+
 	  //close open resources
 	#ifdef _DebugMode
 	  std::cout<<"closing resources"<<std::endl;
 	#endif
 	  //	  LOG(INFO)<<"closing resources"<<std::endl;
-	  outputFile.flush();
-	  outputFile.close();
-
+//	  outputFile.flush();
+//	  outputFile.close();
+	auto constend = std::chrono::high_resolution_clock::now();
+	std::cout<<"whole program took: "<<std::chrono::duration_cast<std::chrono::nanoseconds>(constend-conststart).count()/1000000000.0<<std::endl;
+	std::cout<<"threads taking: "<<threadsTime<<" with pct: "<<(100.0*threadsTime)/(std::chrono::duration_cast<std::chrono::nanoseconds>(constend-conststart).count())<<std::endl;
+	std::cout<<"file writing taking: "<<threadsTime<<" with pct: "<<(100.0*saveTime)/(std::chrono::duration_cast<std::chrono::nanoseconds>(constend-conststart).count())<<std::endl;
 }
 
 }
