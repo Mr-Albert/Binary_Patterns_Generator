@@ -45,13 +45,18 @@ protected:
 	 * <shared memory>previousRow is the last completed row that was generated,needed for validation
 	 * <shared memory> thread-shared random row-data
 	 * randomPatternsThreadArray : threads holder
+	 * ..vector<bool> is problematic..
 	 */
 	std::vector<bool> previousRow,currentRow,randomRow;
 	std::vector<std::thread> randomPatternsThreadArray;
-//	char * previousRowChar;
-//	char *charBuffer;
-//	std::string charType="01,";
-//	char *previousRowCharBuffer;
+
+	/*
+	 * //this was used for writing but was tightly coupled with the class but provided faster writing speed
+	 * char * previousRowChar;
+	 * char *charBuffer;
+	 * std::string charType="01,";
+	 * char *previousRowCharBuffer;
+	 */
 	//how many items each thread should work on
     unsigned long long partPerThread;
     //pattern generator worker
@@ -65,9 +70,6 @@ protected:
 	inline bool singularity_checker(const bool &binaryInput,unsigned long long &currentRowPosition);
 
 public:
-	unsigned long long threadsTime=0,saveTime=0;
-	std::chrono::high_resolution_clock::time_point conststart ;
-	std::chrono::high_resolution_clock::time_point constend ;
 	Random_patterns_generator(unsigned long long patternSize=1,unsigned short noThreads=1,std::string director_path="");
 	//entry point for pattern generation
 	bool generatePattern();

@@ -15,6 +15,7 @@ PatternGenerator::PatternGenerator(unsigned long long &patternSize,unsigned shor
 PatternGenerator::~PatternGenerator()
 {
 }
+//this logger lib keep failing
 //void PatternGenerator::initializeLogger()
 //{
 //	    el::Configurations defaultConf;

@@ -18,7 +18,7 @@
 //#include "easyLogger/easylogging++.h"
 ////#define ELPP_THREAD_SAFE
 //INITIALIZE_EASYLOGGINGPP
-//logger library keeps break, ;;ditching
+//logger library keeps breaking, ;;ditching
 
 bool valid(const std::vector<unsigned short *> &argList)
 {
@@ -29,7 +29,7 @@ bool valid(const std::vector<unsigned short *> &argList)
 	 *
 	 */
 	//if the first parameter is not equal to either of the 2nd or the 3rd param return false
-	if((*argList[0])!=(*argList[1])&&(*argList[0])!=(*argList[2]))
+	if((*argList[0])!=(*argList[1])/*&&(*argList[0])!=(*argList[2])*/)
 		return false;
 	return true;
 }
@@ -39,7 +39,7 @@ int main() {
 //		LOG(INFO) << "starting main";
 		unsigned long long gridWidth;
 		unsigned long long noThreads;
-		//declaring a new scope to destroy the variable after i get what i want with them
+		//declaring a new scope to destroy the variable after i get what i want from them
 		{
 			//new user input class obj to get the  gridWidth and number of threads
 			userInput<unsigned long long,unsigned short *> inputObj;
@@ -50,13 +50,13 @@ int main() {
 		unsigned short inputMethod;
 		{
 			//options
-			unsigned short option1=1,option2=2;
+			unsigned short randomPatternGen=1,allPatternGen=2,fastRandomPatternGen=3;
 			// new user input class with specific validation
 			userInput<unsigned short,unsigned short *> inputObj;
 			//initializing the callback(funcPointer) input parameters
-			std::vector<unsigned short *> argList={&inputMethod,&option1,&option2};
+			std::vector<unsigned short *> argList={&inputMethod,&randomPatternGen,&allPatternGen,&fastRandomPatternGen};
 			//getting user input while passing callback function with its params
-			inputObj.getInput(inputMethod,"Input the Pattern generator Method,'1' for Random , and '2' for All possible patterns : ",argList,valid);
+			inputObj.getInput(inputMethod,"Input the Pattern generator Method,'1' for Random , and '2' for All possible patterns[not Implemented yet],'3' for fast random generator[not Implemented yet] : ",argList,valid);
 		}
 
 		//getting the generator
@@ -67,7 +67,6 @@ int main() {
 		//generating the patterns
 		generator->generatePattern();
 		//#CR give it to the factory's terminator function
-//		delete generator;
 		PatternGeneratorNS::GeneratorFactory::destory_generator(generator);
 		std::cin.get();
 		std::cin.get();

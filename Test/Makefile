@@ -12,19 +12,21 @@ debugFlag = -D _testMode
 
 SRC=$(wildcard $(MAIN_SRC_PATH)/Binary_Pattern_Generator/*.cpp $(MAIN_SRC_PATH)/userInputClass/*.cpp )
 #EASYLOGGERSRC=$(wildcard $(MAIN_SRC_PATH)/easyLogger/*.cc )
+FileWriterSRC=$(wildcard $(MAIN_SRC_PATH)/fileWriter/*.cc )
 TESTSRC=../src/test.cpp $(wildcard $(MAIN_SRC_PATH)/PatternTester/*.cpp)
 TESTDEBUGSRC=../src/testDebug.cpp
 
 OBJ=$(subst ../src, obj, $(SRC:.cpp=.o))
 TESTOBJ=$(subst ../src, obj, $(TESTSRC:.cpp=.o))
 TESTDEBUGOBJ=$(subst ../src, obj, $(TESTDEBUGSRC:.cpp=.o))
+FileWriterOBJ=$(subst ../src, obj, $(FileWriterSRC:.cpp=.o))
 #EASYLOGGEROBJ=$(subst ../src, obj, $(EASYLOGGERSRC:.cc=.o))
 
 #DEBUGFLAG: debugFlag=-D _DebugMode
 #DEBUGFLAG:
 #	@echo defining  $(debugFlag) in compiler options
 	
-test: $(EASYLOGGERSRC) $(TESTSRC) $(SRC) $(EASYLOGGERSRC) $(EXE)
+test: $(EASYLOGGERSRC)  $(TESTSRC) $(SRC) $(EASYLOGGERSRC) $(FileWriterSRC) $(EXE)
 #	@mkdir -p obj
 #	@mkdir -p obj/Binary_Pattern_Generator	
 #	@echo $(TESTSRC)
@@ -33,7 +35,7 @@ test: $(EASYLOGGERSRC) $(TESTSRC) $(SRC) $(EASYLOGGERSRC) $(EXE)
 #	@echo $(SRC)
 #	@echo $(OBJ)
 testDebug:debugFlag=-D _DebugMode
-testDebug: $(EASYLOGGERSRC) $(TESTDEBUGSRC) $(SRC) $(EASYLOGGERSRC) $(TESTEXE)
+testDebug: $(EASYLOGGERSRC)  $(TESTDEBUGSRC) $(SRC) $(EASYLOGGERSRC) $(FileWriterSRC) $(TESTEXE)
 #	@mkdir -p obj
 #	@mkdir -p obj/Binary_Pattern_Generator	
 #	@echo $(TESTSRC)
@@ -42,11 +44,11 @@ testDebug: $(EASYLOGGERSRC) $(TESTDEBUGSRC) $(SRC) $(EASYLOGGERSRC) $(TESTEXE)
 #	@echo $(SRC)
 #	@echo $(OBJ)
 
-$(EXE):  $(TESTOBJ) $(OBJ) $(EASYLOGGEROBJ)
-	$(CC) $(LDFLAGS) $(TESTOBJ) $(EASYLOGGEROBJ) $(OBJ) -o $@ -lstdc++fs
+$(EXE):  $(TESTOBJ)  $(OBJ) $(EASYLOGGEROBJ) $(FileWriterOBJ)
+	$(CC) $(LDFLAGS) $(TESTOBJ) $(EASYLOGGEROBJ) $(OBJ)  $(FileWriterOBJ) -o $@ -lstdc++fs
 	
-$(TESTEXE): $(TESTDEBUGOBJ) $(OBJ) $(EASYLOGGEROBJ)
-	$(CC)  $(LDFLAGS) $(EASYLOGGEROBJ) $(TESTDEBUGOBJ) $(OBJ)   -o $@ -lstdc++fs
+$(TESTEXE): $(TESTDEBUGOBJ)  $(OBJ) $(EASYLOGGEROBJ) $(FileWriterOBJ)
+	$(CC)  $(LDFLAGS)  $(EASYLOGGEROBJ) $(TESTDEBUGOBJ) $(OBJ) $(FileWriterOBJ)   -o $@ -lstdc++fs
 obj/%.o: ../src/%.cpp
 	@mkdir -p obj
 	@mkdir -p obj/Binary_Pattern_Generator	
@@ -61,6 +63,7 @@ obj/%.o: ../src/%.cc
 	@mkdir -p obj/easyLogger	
 	@mkdir -p obj/PatternTester	
 	@mkdir -p obj/userInputClass	
+	@mkdir -p obj/FileWriter	
 	$(CC) -fexceptions $(debugFlag) $(CFLAGS) $(INCL) -o $@ $<
 clean:
 	rm -rf run $(EASYLOGGEROBJ) $(TESTOBJ) $(OBJ)

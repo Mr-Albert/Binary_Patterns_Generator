@@ -16,11 +16,12 @@ PatternGenerator * GeneratorFactory::  make_generator(GeneratorFactory::generato
 	case GeneratorFactory::random_pattern_generator:
 		return new Random_patterns_generator(patternSize,noThreads,director_path);
 	break;
+	//not implemented yet
 	case GeneratorFactory::all_patterns_generator:
 	//	return new All_patterns_generator(patternSize,noThreads);
 	break;
 	case GeneratorFactory::fast_random_patterns_generator:
-//		return new Fast_Random_patterns_generator(patternSize,noThreads,director_path);
+		//return new Fast_Random_patterns_generator(patternSize,noThreads,director_path);
 		break;
 
 	}
