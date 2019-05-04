@@ -25,7 +25,7 @@ C_DEPS :=
 SUBDIRS := \
 src/Binary_Pattern_Generator \
 src/FileWriter \
+src \
 src/PatternTester \
 src/easyLogger \
-src \
 

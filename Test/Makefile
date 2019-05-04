@@ -12,9 +12,9 @@ debugFlag = -D _testMode
 
 SRC=$(wildcard $(MAIN_SRC_PATH)/Binary_Pattern_Generator/*.cpp $(MAIN_SRC_PATH)/userInputClass/*.cpp )
 #EASYLOGGERSRC=$(wildcard $(MAIN_SRC_PATH)/easyLogger/*.cc )
-FileWriterSRC=$(wildcard $(MAIN_SRC_PATH)/fileWriter/*.cc )
+FileWriterSRC=$(wildcard $(MAIN_SRC_PATH)/FileWriter/*.cpp )
 TESTSRC=../src/test.cpp $(wildcard $(MAIN_SRC_PATH)/PatternTester/*.cpp)
-TESTDEBUGSRC=../src/testDebug.cpp
+TESTDEBUGSRC=../src/PatternGenerator.cpp
 
 OBJ=$(subst ../src, obj, $(SRC:.cpp=.o))
 TESTOBJ=$(subst ../src, obj, $(TESTSRC:.cpp=.o))
@@ -26,7 +26,8 @@ FileWriterOBJ=$(subst ../src, obj, $(FileWriterSRC:.cpp=.o))
 #DEBUGFLAG:
 #	@echo defining  $(debugFlag) in compiler options
 	
-test: $(EASYLOGGERSRC)  $(TESTSRC) $(SRC) $(EASYLOGGERSRC) $(FileWriterSRC) $(EXE)
+test: $(TESTSRC) $(SRC) $(FileWriterSRC) $(EXE)
+	
 #	@mkdir -p obj
 #	@mkdir -p obj/Binary_Pattern_Generator	
 #	@echo $(TESTSRC)
@@ -35,7 +36,7 @@ test: $(EASYLOGGERSRC)  $(TESTSRC) $(SRC) $(EASYLOGGERSRC) $(FileWriterSRC) $(EX
 #	@echo $(SRC)
 #	@echo $(OBJ)
 testDebug:debugFlag=-D _DebugMode
-testDebug: $(EASYLOGGERSRC)  $(TESTDEBUGSRC) $(SRC) $(EASYLOGGERSRC) $(FileWriterSRC) $(TESTEXE)
+testDebug:  $(TESTDEBUGSRC) $(SRC) $(FileWriterSRC) $(TESTEXE)
 #	@mkdir -p obj
 #	@mkdir -p obj/Binary_Pattern_Generator	
 #	@echo $(TESTSRC)
@@ -55,15 +56,8 @@ obj/%.o: ../src/%.cpp
 	@mkdir -p obj/easyLogger	
 	@mkdir -p obj/PatternTester
 	@mkdir -p obj/userInputClass
-	
+	@mkdir -p obj/FileWriter
 	$(CC) -fexceptions $(debugFlag) $(CFLAGS) $(INCL) -o $@ $<
-obj/%.o: ../src/%.cc
-	@mkdir -p obj
-	@mkdir -p obj/Binary_Pattern_Generator	
-	@mkdir -p obj/easyLogger	
-	@mkdir -p obj/PatternTester	
-	@mkdir -p obj/userInputClass	
-	@mkdir -p obj/FileWriter	
-	$(CC) -fexceptions $(debugFlag) $(CFLAGS) $(INCL) -o $@ $<
+
 clean:
 	rm -rf run $(EASYLOGGEROBJ) $(TESTOBJ) $(OBJ)
