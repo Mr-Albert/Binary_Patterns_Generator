@@ -9,12 +9,12 @@
 
 namespace PatternGeneratorNS
 {
-Random_patterns_generator::Random_patterns_generator(unsigned long long patternSize,unsigned short noThreads,std::string director_path):PatternGenerator(patternSize,noThreads) {
+Random_patterns_generator::Random_patterns_generator(unsigned long long patternSize,unsigned short noThreads,std::string director_path):PatternGenerator(patternSize,noThreads),fWriter(patternSize,"test",director_path)
+ {
 	try {
-		fWriter= new FileWriter(patternSize,"test","speedncorrectness");
-//		previousRowChar=new char[patternSize*2];
+		//		previousRowChar=new char[patternSize*2];
 		conststart = std::chrono::high_resolution_clock::now();
-//		previousRowCharBuffer = new char [patternSize];
+		//		previousRowCharBuffer = new char [patternSize];
 		//		LOG(INFO) << "starting patterns";
 		//will be removed by the compiler on builds without the _debugMode
 		#ifdef _DebugMode
@@ -148,7 +148,7 @@ bool Random_patterns_generator::generatePattern()
 		 // generate Current row
 		 for(unsigned long long rowIdx=1;rowIdx<patternSize;rowIdx++)
 		 {
-				std::thread backGroundWriterThread=std::thread(&FileWriter::savePatterns,fWriter,std::ref(previousRow));
+				std::thread backGroundWriterThread=std::thread(&FileWriter::savePatterns,&fWriter,std::ref(previousRow));
 			 generate_random_pattern();
 				auto threadsStart = std::chrono::high_resolution_clock::now();
 
@@ -216,7 +216,7 @@ Random_patterns_generator::~Random_patterns_generator() {
 //
 //				}
 //	fWriter.savePattern(previousRowCharBuffer,patternSize);
-		fWriter->savePatterns(previousRow);
+		fWriter.savePatterns(previousRow);
 
 	  //close open resources
 	#ifdef _DebugMode

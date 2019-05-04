@@ -19,6 +19,9 @@ PatternGenerator * GeneratorFactory::  make_generator(GeneratorFactory::generato
 	case GeneratorFactory::all_patterns_generator:
 	//	return new All_patterns_generator(patternSize,noThreads);
 	break;
+	case GeneratorFactory::fast_random_patterns_generator:
+//		return new Fast_Random_patterns_generator(patternSize,noThreads,director_path);
+		break;
 
 	}
 	return nullptr;

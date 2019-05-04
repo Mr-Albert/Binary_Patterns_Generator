@@ -63,7 +63,7 @@ int main() {
 		PatternGeneratorNS::PatternGenerator  *generator =
 			PatternGeneratorNS::GeneratorFactory::
 			make_generator(static_cast <PatternGeneratorNS::GeneratorFactory::generator_type> (inputMethod)
-			,gridWidth,noThreads);
+			,gridWidth,noThreads,"PatternFiles");
 		//generating the patterns
 		generator->generatePattern();
 		//#CR give it to the factory's terminator function

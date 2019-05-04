@@ -38,7 +38,7 @@ class Random_patterns_generator : public  PatternGenerator {
 
 //after removing the save responsibility from this class,the created writer class was made into a friend class(to access the prev row)
 friend FileWriter;
-FileWriter *fWriter;
+FileWriter fWriter;
 protected:
 	/*
 	 * <shared memory>currentRow vector is the currently row being generated

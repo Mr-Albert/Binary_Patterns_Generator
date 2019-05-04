@@ -39,7 +39,7 @@ FileWriter::FileWriter(unsigned long long inputSize,std::string fileNamePrefix,s
 	fileNamePrefix+=std::to_string((static_cast<long int> (time(NULL))))+".txt";
 	currentFileName=fileNamePrefix;
 	outputFile.exceptions( std::ios_base::failbit |std::ios_base::badbit );
-	outputFile.open(currentFileName,std::ios::out | std::ios::binary);
+	outputFile.open(currentFileName,std::ios::out );
 	std::cout<<"writing to file: "<<currentFileName<<std::endl;
 
 

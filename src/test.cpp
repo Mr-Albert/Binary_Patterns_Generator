@@ -19,7 +19,7 @@
 //		std::cout<<"test random binary generator constructed,and now starting :"<<std::endl;
 //		std::cout<<"-threads vs pattern size taken time: "<<std::endl;
 ////		generatorTest.testThreadsSpeed(5,10000);
-//		generatorTest.patternCorrectnessTester(5,100);
+//		generatorTest.patternCorrectnessTester(5,5000);
 //
 //		std::cout<<"~finished threads vs pattern size taken time: "<<std::endl;
 //

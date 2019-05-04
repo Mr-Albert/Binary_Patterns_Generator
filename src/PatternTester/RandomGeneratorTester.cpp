@@ -110,38 +110,87 @@ bool RandomGeneratorTester::patternCorrectnessTester(unsigned short threadRange,
 						,gridWidth,noThreads,directory_path_test);
 					//generating the patterns
 				generator->generatePattern();
-//				std::cout<<"finsihed a test"<<std::endl;
-				delete generator;
-			}
 
+				PatternGeneratorNS::GeneratorFactory::destory_generator(generator);
+			}
 			//read files to test for correctness
 			//for each file
 			std::vector<bool> currentRow;
+			std::vector<bool> prevRow;
 		    for(auto& p: std::experimental::filesystem::directory_iterator(directory_path_test))
 			{
 		    	std::ifstream file;
 		    	file.open(p.path());
 		    	std::string str;
-		    	std::getline(file, str);
-				do
-				{
-					std::string cell;
-				    std::istringstream iss(str);
-				    std::getline(iss, cell, ',');
-				    do{
-				    currentRow.push_back((cell=="0")?0:1);
-				    }while (std::getline(iss, cell, ','));
-				    //check current row with previous row
+		    	(std::getline(file, str));
+		    	unsigned long long line=0;
+				std::vector<bool> currentRow(str.length(),0);
+				std::vector<bool> prevRow(str.length(),0);
 
-				    //swap current with previous
+		    	do
+		    	{
+		    		line++;
 
-				}while (getline(file, str));
+					 long long currIdx=0;
+					 unsigned long long strIdx=0;
+		    		for(;strIdx<str.length();strIdx++)
+		    		{
+
+		    			if(strIdx%2==0)
+		    			{
+
+		    				if(str[strIdx]=='0')
+		    				{
+		    					currentRow[currIdx++]=0;
+		    				}
+		    				else
+		    				{
+								if(str[strIdx]=='1'
+			    						&& ( (currIdx+1>=str.length()||prevRow[currIdx+1]!=1)&&
+			    								(currIdx-1<0 || prevRow[currIdx-1]!=1) ))
+			    				{
+			    					currentRow[currIdx++]=1;
+			    				}
+			    				else
+			    				{
+
+
+			    					std::cout<<"str: "<<str<<std::endl;
+			    		    		for(unsigned long long i=0;i<prevRow.size();i++)
+			    						{
+			    							std::cout<<prevRow[i]<<",";
+
+			    						}
+			    	    			std::cout<<std::endl;
+
+			    					for(unsigned long long i=0;i<prevRow.size();i++)
+			    					{
+			    						std::cout<<currentRow[i]<<",";
+
+			    					}
+			    	    			std::cout<<std::endl;
+			    	    			std::cout<<std::endl;
+			    					throw std::string("error in file "+p.path().u8string()+" line: "+std::to_string(line)+" idx:"+std::to_string(strIdx));
+			    					return 0;
+			    				}
+
+		    				}
+		    			}
+		    		}
+
+		    		prevRow=currentRow;
+
+
+
+		    	}while(std::getline(file, str));
+		    	std::cout<<"checked file: "<<p.path().u8string()<<" with total lines: "<<line<<std::endl;
 			}
 //			std::experimental::filesystem::remove_all(directory_path);
 		}
-		catch(...)
+		catch(std::string &se)
 			{
 				std::cout<<"\nexception,"<<std::endl;
+				std::cout<<se<<std::endl;
 			}
 
 
