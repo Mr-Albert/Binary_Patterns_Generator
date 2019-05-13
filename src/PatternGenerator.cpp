@@ -35,8 +35,7 @@ bool valid(const std::vector<unsigned short *> &argList)
 }
 int main() {
 	try{
-//		initializeLogger();
-//		LOG(INFO) << "starting main";
+
 		unsigned long long gridWidth;
 		unsigned long long noThreads;
 		//declaring a new scope to destroy the variable after i get what i want from them

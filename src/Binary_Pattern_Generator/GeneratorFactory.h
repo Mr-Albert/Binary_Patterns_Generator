@@ -18,7 +18,7 @@ private:
 public:
 	enum generator_type{random_pattern_generator=1,all_patterns_generator=2,fast_random_patterns_generator=3};
 	static PatternGenerator * make_generator(generator_type GeneratorType,const unsigned long long &patternSize,const long long unsigned int noThreads=1,std::string director_path="..");
-	//factories destroy what factories created
+	//factories destroy what factories create
 	static bool destory_generator(PatternGenerator *Generator);
 };
 

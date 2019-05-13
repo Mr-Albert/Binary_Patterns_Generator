@@ -29,7 +29,7 @@ FileWriter::FileWriter(unsigned long long inputSize,std::string fileNamePrefix,s
 	 * then creating a unique file name
 	 * and opening resources(file(s))                //#CR check if the file already exists
 	 * then enabling the file exceptions mechanism
-	 * then openning the file
+	 * then opening the file
 	 */
 	vecBuffer= new char [streamBufferSize];
 	charBuffer= new char [this->outputBufferSize];
@@ -50,7 +50,7 @@ inline bool FileWriter::savePattern(char * toBeWrittenVector,unsigned long long 
 	/*
 	 * this function save the input as is
 	 * ---done--->this funcntion should be made in its own class (pattern generator should only generate patterns and not responsible for saving them)
-	 * ---missing--->and taking a stream & as parameter for better extendibility (closed for mod ,open for extend principle )
+	 * ---missing--->and taking a stream & as parameter for better extensibility (closed for mod ,open for extension principle )
 	 *
 	 */
 		#ifdef _TestMode
@@ -101,7 +101,6 @@ FileWriter::~FileWriter() {
 	outputFile.flush();
 	delete []vecBuffer;
 	delete []charBuffer;
-//	outputFile.close();
 }
 
 } /* namespace PatternGeneratorNS */

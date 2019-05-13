@@ -8,7 +8,7 @@
 #include "GeneratorFactory.h"
 namespace PatternGeneratorNS {
 
-PatternGenerator * GeneratorFactory::  make_generator(GeneratorFactory::generator_type GeneratorType,const unsigned long long &patternSize,const long long unsigned int noThreads,std::string director_path)
+PatternGenerator * GeneratorFactory::make_generator(GeneratorFactory::generator_type GeneratorType,const unsigned long long &patternSize,const long long unsigned int noThreads,std::string director_path)
 {
 	switch (GeneratorType)
 	{
