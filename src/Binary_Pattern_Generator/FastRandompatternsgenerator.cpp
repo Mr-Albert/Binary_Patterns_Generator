@@ -22,78 +22,54 @@ Fast_Random_patterns_generator<row_block_type>::Fast_Random_patterns_generator
     m_parts_per_thread=_blocks_per_row/t_number_of_threads;
 	//init RNG
     m_RNG	=	std::mt19937_64(m_rd);
-    m_generate_pattern(m_previous_row,m_previous_row,false);
+    m_generate_pattern(m_first_row_tag_dispatcher);
 
 
 
 }
 template <class row_block_type>
-bool Fast_Random_patterns_generator <row_block_type>::m_generate_pattern(std::vector<row_block_type> &r_destination,
-		std::vector<row_block_type> const &r_HISTORY,bool const t_HISTORY_TAG)
+bool Fast_Random_patterns_generator <row_block_type>::m_generate_pattern(m_first_row_tag_dispatcher &r_dummy_tag_dispatch)
 {
-	if(t_HISTORY_TAG	==	false )
+	m_generate_random_row();
+	//threads
+	for(unsigned short thread_indx=0;thread_indx<noThreads-1;thread_indx++)
+	{
+		 m_threads_array[thread_indx]=std::thread(m_generate_first_row,this,
+				thread_indx*(m_parts_per_thread),(thread_indx+1)*(m_parts_per_thread));
+	}
+	 m_threads_array[noThreads-1]=std::thread(m_generate_first_row,this,
+			(noThreads-1)*(m_parts_per_thread),std::max( (noThreads)*(m_parts_per_thread),patternSize )   );
+	//join
+	for(unsigned short thread_indx=0;thread_indx<noThreads;thread_indx++)
+	{
+		m_threads_array[thread_indx].join();
+	}
+}
+
+
+template <class row_block_type>
+bool Fast_Random_patterns_generator <row_block_type>::m_generate_pattern()
+{
+	for(ull row_number=1;row_number<patternSize;row_number++)
 	{
 		m_generate_random_row();
-		//threads
+		std::thread backGroundWriterThread=std::thread(&FileWriter::savePatterns,&m_fWriter,std::ref(m_previous_row));
 		for(unsigned short thread_indx=0;thread_indx<noThreads-1;thread_indx++)
 		{
-			 m_threads_array[thread_indx]=std::thread(m_generate_first_row,this,
+			m_threads_array[thread_indx]=std::thread(
+					m_generate_row_worker,this,std::ref(m_current_row),std::ref(m_previous_row),
 					thread_indx*(m_parts_per_thread),(thread_indx+1)*(m_parts_per_thread));
 		}
-		 m_threads_array[noThreads-1]=std::thread(m_generate_first_row,this,
-				(noThreads-1)*(m_parts_per_thread),std::max( (noThreads)*(m_parts_per_thread),patternSize )   );
+		randomPatternsThreadArray[noThreads-1]=std::thread(m_generate_row_worker,this,std::ref(m_current_row),,std::ref(m_previous_row),
+				(noThreads-1)*(m_parts_per_thread),std::max((noThreads)*(m_parts_per_thread),patternSize));
 		//join
 		for(unsigned short thread_indx=0;thread_indx<noThreads;thread_indx++)
 		{
 			m_threads_array[thread_indx].join();
 		}
-//	    m_fWriter.savePattern(m_previous_row);
-	}
-	else
-	{
-		for(ull row_number=1;row_number<patternSize;row_number++)
-		{
-			m_generate_random_row();
-			std::thread backGroundWriterThread=std::thread(&FileWriter::savePatterns,&m_fWriter,std::ref(m_previous_row));
-			for(unsigned short thread_indx=0;thread_indx<noThreads-1;thread_indx++)
-			{
-				m_threads_array[thread_indx]=std::thread(
-						m_generate_row_worker,this,std::ref(m_current_row),std::ref(m_previous_row),
-						thread_indx*(m_parts_per_thread),(thread_indx+1)*(m_parts_per_thread));
-			}
-			randomPatternsThreadArray[noThreads-1]=std::thread(m_generate_row_worker,this,std::ref(m_current_row),,std::ref(m_previous_row),
-					(noThreads-1)*(m_parts_per_thread),std::max((noThreads)*(m_parts_per_thread),patternSize));
-			//join
-			for(unsigned short thread_indx=0;thread_indx<noThreads;thread_indx++)
-			{
-				m_threads_array[thread_indx].join();
-			}
-			backGroundWriterThread.join();
-//			threads for generating the current row
-//			_generate_row_worker(previous_row,previous_row,false);
+		backGroundWriterThread.join();
 
-		}
-//		//for all remaining row..i.e pattern_size-1 rows
-//		 std::thread backGroundWriterThread=std::thread(&FileWriter::savePatterns,&m_fWriter,std::ref(m_previous_row));
-//
-//		 for(unsigned short threadIdx=0;threadIdx<noThreads-1;threadIdx++)
-//		{
-//			randomPatternsThreadArray[threadIdx]=std::thread(
-//					_generate_row_worker,this,std::ref(_current_row),std::ref(_previous_row),
-//						threadIdx*(partPerThread),(threadIdx+1)*(partPerThread));
-//		}
-//		randomPatternsThreadArray[noThreads-1]=std::thread(_generate_row_worker,this,std::ref(currentRow),,std::ref(_previous_row),
-//				(noThreads-1)*(partPerThread),Random_patterns_generator::max((noThreads)*(partPerThread),patternSize));
-//		//join
-//		for(unsigned short threadIdx=0;threadIdx<noThreads;threadIdx++)
-//		{
-//			randomPatternsThreadArray[threadIdx].join();
-//		}
-//		backGroundWriterThread.join();
-		//threads for generating the current row
-//	    _generate_row_worker(previous_row,previous_row,false);
-	    //a thread for writing the previous row
-		//join
+
 	}
 
 }
