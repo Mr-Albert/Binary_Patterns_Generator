@@ -5,18 +5,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/Binary_Pattern_Generator/Allpatternsgenerator.cpp \
+../src/Binary_Pattern_Generator/FastRandompatternsgenerator.cpp \
 ../src/Binary_Pattern_Generator/GeneratorFactory.cpp \
 ../src/Binary_Pattern_Generator/PatternGenerator.cpp \
 ../src/Binary_Pattern_Generator/Randompatternsgenerator.cpp 
 
 OBJS += \
 ./src/Binary_Pattern_Generator/Allpatternsgenerator.o \
+./src/Binary_Pattern_Generator/FastRandompatternsgenerator.o \
 ./src/Binary_Pattern_Generator/GeneratorFactory.o \
 ./src/Binary_Pattern_Generator/PatternGenerator.o \
 ./src/Binary_Pattern_Generator/Randompatternsgenerator.o 
 
 CPP_DEPS += \
 ./src/Binary_Pattern_Generator/Allpatternsgenerator.d \
+./src/Binary_Pattern_Generator/FastRandompatternsgenerator.d \
 ./src/Binary_Pattern_Generator/GeneratorFactory.d \
 ./src/Binary_Pattern_Generator/PatternGenerator.d \
 ./src/Binary_Pattern_Generator/Randompatternsgenerator.d 
