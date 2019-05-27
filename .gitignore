@@ -34,3 +34,9 @@
 
 *.txt
 /Release/
+
+Binary_Patterns_Generator\.exe\.stackdump
+
+gdb\.exe\.stackdump
+
+testDebugRun\.exe\.stackdump
