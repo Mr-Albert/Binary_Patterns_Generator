@@ -44,7 +44,7 @@ class Fast_Random_patterns_generator: public  PatternGenerator  {
     bool m_generate_row(std::vector<row_block_type> &r_destination,std::vector<row_block_type> const &r_HISTORY,bool const t_HISTORY_TAG=true);
 //    bool generatePattern();
     bool generatePattern(m_first_row_tag &);
-    void m_generate_first_row(ull t_row_start,ull t_row_end);
+    bool m_generate_first_row(ull t_row_start,ull t_row_end);
     bool m_generate_row_worker(ull t_row_start,ull t_row_end);
 	bool m_generate_random_row();
 	public:
