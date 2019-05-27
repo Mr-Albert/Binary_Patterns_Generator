@@ -6,6 +6,7 @@
  */
 
 #include "FileWriter.h"
+#include <bitset>
 
 namespace PatternGeneratorNS {
 //may be make it a tempelate for extendability
@@ -86,6 +87,41 @@ bool FileWriter::savePatterns(std::vector<bool>& toBeWrittenVector)
 		}
 		charBuffer[i]=serialize(toBeWrittenVector[j]);
 		charBuffer[++i]=serialize("\n");
+		savePattern(charBuffer,outputBufferSize);
+	}
+	catch(const std::exception &e)
+	{
+		std::cout<<e.what()<<", while saving vector<bool> at file: "<<__FILE__<<", line = "<<__LINE__<<std::endl;
+
+	}
+	return 0;
+}
+
+bool FileWriter::savePatterns(std::vector<unsigned long long>& toBeWrittenVector)
+{
+
+	try{
+ 		unsigned long long input_indx=0,buffer_indx=0;
+		for(;input_indx<toBeWrittenVector.size()-1&&buffer_indx<outputBufferSize-2;input_indx++,buffer_indx)
+		{
+			for(unsigned short bits=63;bits>=0&&buffer_indx<outputBufferSize-2;bits--)
+			{
+				charBuffer[buffer_indx++]=(toBeWrittenVector[input_indx]>>bits & 1)?'1':'0';
+				charBuffer[buffer_indx++]=',';
+			}
+		}
+		unsigned short bits=63;
+		for(;bits>0&&buffer_indx<outputBufferSize-2;bits--)
+		{
+			auto tmp=toBeWrittenVector[input_indx]>>bits;
+			charBuffer[buffer_indx++]=
+					(tmp & 1!=0)?
+							'1':'0';
+			charBuffer[buffer_indx++]=',';
+		}
+		charBuffer[buffer_indx++]=(toBeWrittenVector[input_indx]>>bits & 1)?'1':'0';
+		charBuffer[buffer_indx++]='\n';
+//		std::cout<<std::bitset<64>(toBeWrittenVector[input_indx])<<std::endl;
 		savePattern(charBuffer,outputBufferSize);
 	}
 	catch(const std::exception &e)
