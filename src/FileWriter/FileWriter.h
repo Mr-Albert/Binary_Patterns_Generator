@@ -29,6 +29,7 @@ private:
 public:
 	FileWriter(unsigned long long inputSize,std::string fileNamePrefix="file_",std::string directory="..",unsigned int streamBufferSize=2048*2048);
 	bool savePatterns(std::vector<bool>& toBeWrittenVector);
+	bool savePatterns(std::vector<unsigned long long>& toBeWrittenVector);
 	inline bool savePattern(char * toBeWrittenVector,unsigned long long &size);
 	virtual ~FileWriter();
 };

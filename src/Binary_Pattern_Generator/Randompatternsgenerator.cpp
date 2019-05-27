@@ -148,7 +148,7 @@ bool Random_patterns_generator::generatePattern()
 		 for(unsigned long long rowIdx=1;rowIdx<patternSize;rowIdx++)
 		 {
 			 //start a background thread to start writing to files
-			 std::thread backGroundWriterThread=std::thread(&FileWriter::savePatterns,&fWriter,std::ref(previousRow));
+			 std::thread backGroundWriterThread=std::thread(static_cast<bool (FileWriter::*)(std::vector<bool>&)>(&FileWriter::savePatterns),&fWriter,std::ref(previousRow));
 			 generate_random_pattern();
 
 			 for(unsigned short threadIdx=0;threadIdx<noThreads-1;threadIdx++)

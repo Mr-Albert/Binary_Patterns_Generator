@@ -29,7 +29,7 @@ bool valid(const std::vector<unsigned short *> &argList)
 	 *
 	 */
 	//if the first parameter is not equal to either of the 2nd or the 3rd param return false
-	if((*argList[0])!=(*argList[1])/*&&(*argList[0])!=(*argList[2])*/)
+	if((*argList[0])!=(*argList[1])&&(*argList[0])!=(*argList[3]))
 		return false;
 	return true;
 }
@@ -55,7 +55,7 @@ int main() {
 			//initializing the callback(funcPointer) input parameters
 			std::vector<unsigned short *> argList={&inputMethod,&randomPatternGen,&allPatternGen,&fastRandomPatternGen};
 			//getting user input while passing callback function with its params
-			inputObj.getInput(inputMethod,"Input the Pattern generator Method,'1' for Random , and '2' for All possible patterns[not Implemented yet],'3' for fast random generator[not Implemented yet] : ",argList,valid);
+			inputObj.getInput(inputMethod,"Input the Pattern generator Method,'1' for Random , and '2' for All possible patterns[not Implemented yet],'3' for fast random generator : ",argList,valid);
 		}
 
 		//getting the generator
