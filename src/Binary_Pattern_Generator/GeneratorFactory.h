@@ -8,8 +8,9 @@
 #ifndef GENERATORFACTORY_H_
 #define GENERATORFACTORY_H_
 #include "Randompatternsgenerator.h"
-//#include "FastRandompatternsgenerator.h"
+#include "FastRandompatternsgenerator.h"
 #include "allpatternsgenerator.h"
+
 namespace PatternGeneratorNS {
 class GeneratorFactory {
 private:

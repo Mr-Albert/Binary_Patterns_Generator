@@ -30,6 +30,8 @@ class Fast_Random_patterns_generator: public  PatternGenerator  {
 	friend FileWriter;
 	FileWriter m_fWriter;
 	ull m_parts_per_thread;
+	ull m_blocks_per_row;
+	struct m_first_row_tag {} m_first_row_tag_dispatcher;
 	protected:
 	std::vector<row_block_type> m_previous_row,m_current_row,m_shared_random_row;
 	std::vector<std::thread> m_threads_array;
@@ -38,16 +40,17 @@ class Fast_Random_patterns_generator: public  PatternGenerator  {
     //Define the distribution
     std::uniform_int_distribution<row_block_type> m_uniformly_dist_random_number;
     inline row_block_type m_get_random_number();
-    inline row_block_type m_singularity_checker(row_block_type &r_to_be_ckecked,row_block_type &r_to_be_ckecked_with);
+    inline row_block_type m_singularity_checker(row_block_type t_to_be_ckecked_with,row_block_type t_to_be_ckecked);
     bool m_generate_row(std::vector<row_block_type> &r_destination,std::vector<row_block_type> const &r_HISTORY,bool const t_HISTORY_TAG=true);
-    bool m_generate_pattern(std::vector<row_block_type> &r_destination,std::vector<row_block_type> const &r_HISTORY,bool const t_HISTORY_TAG);
+//    bool generatePattern();
+    bool generatePattern(m_first_row_tag &);
     void m_generate_first_row(ull t_row_start,ull t_row_end);
-    bool m_generate_row_worker(std::vector<row_block_type> &r_destination,std::vector<row_block_type> const &r_HISTORY);
+    bool m_generate_row_worker(ull t_row_start,ull t_row_end);
 	bool m_generate_random_row();
 	public:
 		Fast_Random_patterns_generator(ull t_pattern_size=1,unsigned short t_number_of_threads=1,std::string t_directory_path="",std::string t_files_prefix="test");
 		//entry point for pattern generation
-		bool generatePattern();
+	    bool generatePattern();
 		virtual ~Fast_Random_patterns_generator();
 
 
